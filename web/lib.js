@@ -196,6 +196,29 @@ AV.say = (text, opts = {}) => {
 };
 AV.speak = (text, on = true) => { if (on) AV.say(text); };
 
+// micrófono en segundo plano mientras se escucha "Hey Sanbosi": guarda los últimos segundos de audio para poder
+// analizar la voz también cuando el astronauta dice todo seguido ("Hey Sanbosi, ¿cómo está mi corazón?")
+AV.AudioRing = class {
+  constructor(sec = 12) { this.sec = sec; this.bufs = []; this.on = false; this.starting = false; }
+  async start() {
+    if (this.on || this.starting || !navigator.mediaDevices) return;
+    this.starting = true;
+    try {
+      this.stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: false, autoGainControl: false}});
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)(); this.sr = this.ctx.sampleRate;
+      const src = this.ctx.createMediaStreamSource(this.stream), max = Math.ceil(this.sec * this.sr / 4096);
+      this.proc = this.ctx.createScriptProcessor(4096, 1, 1);
+      this.proc.onaudioprocess = e => { this.bufs.push({t: Date.now(), d: new Float32Array(e.inputBuffer.getChannelData(0))}); if (this.bufs.length > max) this.bufs.shift(); };
+      src.connect(this.proc); this.proc.connect(this.ctx.destination); this.on = true;
+    } catch (e) { this.on = false; }
+    this.starting = false;
+  }
+  resume() { try { if (this.ctx && this.ctx.state === "suspended") this.ctx.resume(); } catch (e) {} }
+  stop() { if (!this.on) return; this.on = false; try { this.proc.disconnect(); this.stream.getTracks().forEach(t => t.stop()); this.ctx.close(); } catch (e) {} this.bufs = []; }
+  seconds(fromMs) { return this.bufs.filter(b => b.t >= fromMs).length * 4096 / (this.sr || 48000); }
+  wav(fromMs) { return AV.Recorder.prototype.wav.call({chunks: this.bufs.filter(b => b.t >= fromMs).map(b => b.d), sr: this.sr}, 16000); }
+};
+
 AV.sendVoice = async (crewId, blob, transcript, calibrate, ask = 1, log = 1) => {
   const r = await fetch(AV.L(`/api/voice/${crewId}?transcript=${encodeURIComponent(transcript || "")}&calibrate=${calibrate ? 1 : 0}&ask=${ask}&log=${log}`), {method: "POST", body: blob, headers: {"Content-Type": "audio/wav"}});
   return r.json();
