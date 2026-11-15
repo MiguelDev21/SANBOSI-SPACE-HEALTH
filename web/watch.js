@@ -738,13 +738,11 @@ function findWake(text) {
   }
   return null;
 }
-const WAKE = {rec: null, on: false, want: false, busy: false, busyAt: 0, lastEvt: 0, fails: 0, lastFinalAt: 0, hitFrom: 0};
-const RING = new AV.AudioRing(12);
+const WAKE = {rec: null, on: false, want: false, busy: false, busyAt: 0, lastEvt: 0, fails: 0};
 function wakeSupported() { return !!(window.SpeechRecognition || window.webkitSpeechRecognition); }
 function setBusy(v) { WAKE.busy = v; WAKE.busyAt = v ? Date.now() : 0; }
 function wakeStart() {
   if (!WAKE.want || !W.mic || W.rec || W.speaking || WAKE.on || WAKE.busy || !wakeSupported()) { wakeUI(); return; }
-  if (!RING.on) RING.start();
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition, r = new SR();
   r.lang = AV.speechLang(); r.continuous = true; r.interimResults = true; r.maxAlternatives = 5;
   r.onstart = r.onaudiostart = r.onsoundstart = () => { WAKE.lastEvt = Date.now(); WAKE.fails = 0; };
@@ -756,10 +754,9 @@ function wakeStart() {
     // de todas las variantes que entendió el navegador, prefiere la que trae un comando reconocible
     const hits = []; for (let a = 0; a < res.length; a++) { const h = findWake(res[a].transcript); if (h) hits.push(h); }
     const heard = res[0].transcript.trim(); $("#wakeHeard").textContent = heard ? `“${heard}”` : "";
-    if (!hits.length) { if (res.isFinal) WAKE.lastFinalAt = Date.now(); return; }
+    if (!hits.length) return;
     const hit = hits.find(h => h.rest && matchCommand(h.rest)) || hits[0];
     if (!res.isFinal && hit.rest.split(" ").filter(Boolean).length >= 1 && hit.rest.split(" ").length < 3) return;   // frase en curso
-    WAKE.hitFrom = Math.max(WAKE.lastFinalAt, Date.now() - 9000);   // audio de esta frase (desde que terminó la anterior)
     setBusy(true); wakeStop(); onWake(hit.rest.trim());
   };
   r.onend = () => { if (WAKE.rec !== r) return; WAKE.on = false; WAKE.rec = null; if (WAKE.want && !WAKE.busy) setTimeout(wakeStart, 250); wakeUI(); };
@@ -780,7 +777,7 @@ setInterval(() => {
   if (W.speaking && window.speechSynthesis && !speechSynthesis.speaking && !speechSynthesis.pending && now - (W.speakAt || now) > 3000) W.speaking = false;
   if (!WAKE.on && !W.rec && !W.speaking && !WAKE.busy) wakeStart();
 }, 1500);
-document.addEventListener("visibilitychange", () => { if (document.hidden) RING.stop(); else { if (WAKE.want) RING.start(); setTimeout(wakeStart, 300); } });
+document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(wakeStart, 300); });
 function wakeUI() { const el = $("#wakeState"); if (!el) return;
   el.innerHTML = !wakeSupported() ? `<span class="c-warn">${L2("La activación por voz necesita Chrome o Edge.", "Voice wake-up needs Chrome or Edge.")}</span>` : WAKE.want ? (WAKE.on ? `<span class="c-ok">● ${L2("Escuchando “Hola Sanbosi”", "Listening for “Hey Sanbosi”")}</span>` : `<span class="muted">● ${L2("En espera…", "Standing by…")}</span>`) : `<span class="muted">${L2("Desactivada", "Off")}</span>`;
   $("#wakeToggle").checked = WAKE.want; }
@@ -789,17 +786,10 @@ function onWake(rest) {
   if (rest && W.stack[W.stack.length - 1] === "diario" && diaryVoice(rest)) { setBusy(false); wakeStart(); return; }
   W.returnTo = W.stack.slice(); W.stack = []; W.layer = "listen"; renderView(true); applyLayers(); vibrate();
   const cmd = matchCommand(rest);
-  // frase dicha de corrido: se analiza también cómo sonó la voz con el audio que guardó el micrófono en segundo plano
-  if (rest && RING.on) {
-    const from = WAKE.hitFrom || Date.now() - 6000;
-    setTimeout(() => { if (RING.seconds(from) < 1) return;
-      AV.sendVoice(W.crew, RING.wav(from), rest, false, 0, cmd ? 1 : 0)
-        .then(res => { if (res && res.voice) { W.lastVoiceTs = res.voice.ts; W.lastShownVoice = res.voice.ts; showVoice(res.voice); } poll(); }).catch(() => {}); }, 400);
-  }
   if (cmd) { listenUI("Hecho", `“${rest}”`, "Cerrar", "home"); setBusy(false); setTimeout(() => { W.layer = null; applyLayers(); runCommand(cmd, rest); }, 500); return; }
   if (rest && rest.split(" ").length >= 3) {
     listenUI("Pensando…", `“${rest}”`, "Cerrar", "home");
-    AV.post(`/api/chat/${W.crew}`, {text: rest, source: RING.on ? "voz" : "texto"}).then(async r => { setBusy(false); W.result = {heard: rest, reply: r, voice: null}; W.resultAt = Date.now(); if (r && r.ts) W.since = Math.max(W.since, r.ts);
+    AV.post(`/api/chat/${W.crew}`, {text: rest}).then(async r => { setBusy(false); W.result = {heard: rest, reply: r, voice: null}; W.resultAt = Date.now(); if (r && r.ts) W.since = Math.max(W.since, r.ts);
       await poll(); W.layer = null; W.stack = ["recuerda"]; renderView(true); applyLayers(); say(r.text); })
       .catch(() => { setBusy(false); W.layer = null; applyLayers(); say(L2("No pude hablar con la estación. Inténtalo de nuevo.", "I couldn't reach the station. Please try again.")); });
     return;
@@ -809,33 +799,7 @@ function onWake(rest) {
   say(greet, () => { setBusy(false); startListen(true); });
 }
 window.__sambosi = {onWake: x => onWake(x), matchCommand, findWake, state: W, go, home};   // ganchos para pruebas automáticas
-$("#wakeToggle").addEventListener("change", e => { WAKE.want = e.target.checked; if (WAKE.want) wakeStart(); else { wakeStop(); RING.stop(); } });
-document.addEventListener("pointerdown", () => RING.resume());
-// selector de micrófono: el iPhone (Continuidad), audífonos o el de la Mac
-async function fillMics() {
-  const sel = $("#micSel"); if (!sel) return;
-  const mics = await AV.listMics(), cur = AV.micId();
-  const opts = [`<option value="">${L2("Predeterminado del sistema", "System default")}</option>`]
-    .concat(mics.filter(m => m.deviceId && m.deviceId !== "default" && m.deviceId !== "communications").map((m, i) => `<option value="${m.deviceId}">${esc(m.label || L2("Micrófono ", "Microphone ") + (i + 1))}</option>`));
-  sel.innerHTML = opts.join(""); sel.value = mics.some(m => m.deviceId === cur) ? cur : "";
-}
-$("#micSel").addEventListener("change", e => {
-  AV.setMic(e.target.value);
-  RING.stop(); if (WAKE.want) RING.start();
-  banner(L2("Micrófono", "Microphone"), e.target.selectedOptions[0].textContent);
-});
-// Cuando macOS cambia el micrófono por su cuenta (p. ej. el iPhone por Continuidad) se sueltan los micrófonos
-// abiertos y se vuelven a abrir, para que el reloj siga al micrófono que el sistema eligió y no se quede con el anterior.
-let devTimer = 0;
-if (navigator.mediaDevices) navigator.mediaDevices.addEventListener("devicechange", () => {
-  clearTimeout(devTimer);
-  devTimer = setTimeout(() => {
-    fillMics();
-    if (RING.on) { RING.stop(); if (WAKE.want) RING.start(); }
-    if (WAKE.on && !W.rec && !W.speaking) wakeStop();          // el vigilante la vuelve a abrir con el micrófono nuevo
-  }, 600);
-});
-setTimeout(fillMics, 1500); setTimeout(fillMics, 6000);   // los nombres aparecen cuando el navegador ya dio permiso al micrófono
+$("#wakeToggle").addEventListener("change", e => { WAKE.want = e.target.checked; if (WAKE.want) wakeStart(); else wakeStop(); });
 
 const ptt = $("#ptt");
 ptt.addEventListener("mousedown", e => { e.preventDefault(); W.pttHold = true; if (!W.mic) { W.mic = true; W.micUntil = 0; } startListen(false); });

@@ -66,7 +66,7 @@ AV.gauge = (v, label, color) => {
 AV.Recorder = class {
   constructor(onLevel) { this.onLevel = onLevel; this.chunks = []; this.rec = null; this.transcript = ""; this.peakDb = -100; this.alts = []; this.finals = ""; this.active = false; this.lastTextAt = 0; this.lastFinal = false; }
   async start() {
-    this.stream = await navigator.mediaDevices.getUserMedia(AV.micConstraints());
+    this.stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: false, autoGainControl: false}});
     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     this.sr = this.ctx.sampleRate; this.chunks = []; this.peakDb = -100; this.transcript = "";
     const src = this.ctx.createMediaStreamSource(this.stream);
@@ -195,36 +195,6 @@ AV.say = (text, opts = {}) => {
   return () => { stopped = true; speechSynthesis.cancel(); };
 };
 AV.speak = (text, on = true) => { if (on) AV.say(text); };
-
-// ---------------------------------------------------------------- micrófono elegido (Mac, iPhone, audífonos…)
-// Se guarda la elección; si ese micrófono no está conectado se usa el predeterminado del navegador.
-AV.micId = () => { try { return localStorage.getItem("sanbosi_mic") || ""; } catch (e) { return ""; } };
-AV.setMic = id => { try { localStorage.setItem("sanbosi_mic", id || ""); } catch (e) {} };
-AV.micConstraints = () => { const a = {echoCancellation: true, noiseSuppression: false, autoGainControl: false}, id = AV.micId(); if (id) a.deviceId = {ideal: id}; return {audio: a}; };
-AV.listMics = async () => { try { return (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === "audioinput"); } catch (e) { return []; } };
-
-// micrófono en segundo plano mientras se escucha "Hey Sanbosi": guarda los últimos segundos de audio para poder
-// analizar la voz también cuando el astronauta dice todo seguido ("Hey Sanbosi, ¿cómo está mi corazón?")
-AV.AudioRing = class {
-  constructor(sec = 12) { this.sec = sec; this.bufs = []; this.on = false; this.starting = false; }
-  async start() {
-    if (this.on || this.starting || !navigator.mediaDevices) return;
-    this.starting = true;
-    try {
-      this.stream = await navigator.mediaDevices.getUserMedia(AV.micConstraints());
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)(); this.sr = this.ctx.sampleRate;
-      const src = this.ctx.createMediaStreamSource(this.stream), max = Math.ceil(this.sec * this.sr / 4096);
-      this.proc = this.ctx.createScriptProcessor(4096, 1, 1);
-      this.proc.onaudioprocess = e => { this.bufs.push({t: Date.now(), d: new Float32Array(e.inputBuffer.getChannelData(0))}); if (this.bufs.length > max) this.bufs.shift(); };
-      src.connect(this.proc); this.proc.connect(this.ctx.destination); this.on = true;
-    } catch (e) { this.on = false; }
-    this.starting = false;
-  }
-  resume() { try { if (this.ctx && this.ctx.state === "suspended") this.ctx.resume(); } catch (e) {} }
-  stop() { if (!this.on) return; this.on = false; try { this.proc.disconnect(); this.stream.getTracks().forEach(t => t.stop()); this.ctx.close(); } catch (e) {} this.bufs = []; }
-  seconds(fromMs) { return this.bufs.filter(b => b.t >= fromMs).length * 4096 / (this.sr || 48000); }
-  wav(fromMs) { return AV.Recorder.prototype.wav.call({chunks: this.bufs.filter(b => b.t >= fromMs).map(b => b.d), sr: this.sr}, 16000); }
-};
 
 AV.sendVoice = async (crewId, blob, transcript, calibrate, ask = 1, log = 1) => {
   const r = await fetch(AV.L(`/api/voice/${crewId}?transcript=${encodeURIComponent(transcript || "")}&calibrate=${calibrate ? 1 : 0}&ask=${ask}&log=${log}`), {method: "POST", body: blob, headers: {"Content-Type": "audio/wav"}});
