@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SANBOSI · Reloj del astronauta</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="/static/common.css">
+<link rel="stylesheet" href="/static/watch.css">
+</head>
+<body>
+<header class="wtop">
+  <span class="logo" aria-hidden="true"></span><span class="brandname">SANBOSI</span><span class="muted hide-sm">· Reloj del astronauta · conectado a la estación</span>
+  <div class="r"><label class="lbl" for="crew">Astronauta</label><select id="crew"></select>
+    <div class="langbox" role="group" aria-label="Idioma"><button class="lg" data-lang="es">ES</button><button class="lg" data-lang="en">EN</button></div>
+    <a class="btn small" href="/">Panel</a><a class="btn small" href="/?ver=earth">Tierra</a></div>
+</header>
+<div class="stage">
+  <div class="wwrap" id="wwrap">
+    <div class="watch" id="watch">
+      <div class="strap t" aria-hidden="true"></div><div class="strap b" aria-hidden="true"></div>
+      <button type="button" class="hw crown" id="crownBtn" aria-label="Corona: ir al inicio o abrir las apps"></button>
+      <button type="button" class="hw side" id="sideBtn" aria-label="Botón lateral: hablar con el asistente"></button>
+      <div class="bezel">
+        <div class="screen" id="screen">
+          <!-- páginas deslizables: agenda · esfera · tu día · radiación · corazón · energía (igual al canvas) -->
+          <div class="track" id="track">
+            <button class="scr pgx agenda" data-go="rutina" aria-label="Agenda de hoy. Tocar para abrir la rutina" style="left:0">
+              <span class="lbl2">Hoy en la misión</span><span id="pgAgenda" class="agl"></span>
+            </button>
+            <section class="scr face" aria-label="Esfera" style="left:396px">
+              <div class="gamp" id="glowFace" aria-hidden="true"><div class="glow"><span class="g1"></span><span class="g2"></span><span class="g3"></span></div></div>
+              <button class="micline" data-act="side"><span class="dot" id="micDot"></span><span id="micTxt">Lista para escucharte</span></button>
+              <div class="mid">
+                <button class="day" data-go="buenosdias" id="dayLbl">Día 42 de misión</button>
+                <span class="clock" id="clock">--:--</span>
+                <div class="chips"><button class="chip" data-go="radiacion" id="chipRad"></button><button class="chip" data-act="sheet" id="chipAl"></button></div>
+              </div>
+              <button class="rings" data-act="page1" aria-label="Ver tu día" id="rings"></button>
+              <span class="hint r" aria-hidden="true">‹</span><span class="hint l" aria-hidden="true">›</span>
+            </section>
+            <button class="scr pgx" data-go="hoy" aria-label="Tarjeta: tu día. Tocar para abrir" style="left:792px;padding:40px 34px 34px">
+              <span class="lbl2" style="padding:0 4px">Tu día</span><span id="pgDia" class="bars4"></span></button>
+            <button class="scr pgx center" data-go="radiacion" aria-label="Tarjeta: radiación. Tocar para abrir" style="left:1188px;gap:10px">
+              <span class="lbl2">Radiación</span>
+              <span class="bignum"><b id="pgRad">—</b><small>µGy/h</small></span>
+              <span id="pgRadSt" style="font-size:15px"></span>
+              <span class="rscale" style="margin-top:14px;width:240px"><i></i><i></i><i></i><u id="pgRadMk"></u></span>
+              <span class="sub" id="pgRadDose"></span></button>
+            <button class="scr pgx center" data-go="corazon" aria-label="Tarjeta: corazón. Tocar para abrir" style="left:1584px;gap:12px">
+              <span class="lbl2">Corazón · en vivo</span>
+              <span class="heartbig" id="pgHeart" aria-hidden="true"><svg width="60" height="60" viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11.2A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 2.8C20 15.8 12 21 12 21z" fill="#F49B8E"/></svg></span>
+              <span class="bignum"><b id="pgBpm" style="font-size:64px">—</b><small>lpm</small></span>
+              <span class="sub" id="pgHeartSub"></span></button>
+            <button class="scr pgx center" data-go="voz" aria-label="Tarjeta: energía por la voz. Tocar para abrir" style="left:1980px;gap:8px">
+              <span class="lbl2">Energía por tu voz</span>
+              <span class="arcbox" id="pgArc"></span>
+              <span class="sub" id="pgEnergySub" style="text-align:center"></span></button>
+          </div>
+          <div class="dots" id="dots" aria-hidden="true"></div>
+
+          <section class="quick" id="quick" aria-label="Accesos rápidos">
+            <div class="qtop"><span id="qStation">Estación conectada</span><span id="qBatt">Batería —</span></div>
+            <div class="qgrid">
+              <button class="q" data-act="mic"><span class="qi" id="qMic"></span><span id="qMicT">Micrófono</span></button>
+              <button class="q" data-act="dnd"><span class="qi" id="qDnd"></span>No molestar</button>
+              <button class="q" data-act="sleep"><span class="qi" id="qSleep"></span>Modo sueño</button>
+              <button class="q" data-act="sync"><span class="qi" id="qSync"></span><span id="qSyncT">Sincronizar</span></button>
+              <button class="q" data-act="torch"><span class="qi" id="qTorch"></span>Linterna</button>
+              <button class="q" data-act="doctor"><span class="qi" id="qDoc"></span><span id="qDocT">Médico</span></button>
+            </div><span class="grab" aria-hidden="true"></span>
+          </section>
+
+          <section class="sheet" id="sheet" aria-label="Avisos"><span class="grab" aria-hidden="true"></span><span class="sheetT">Avisos</span><div id="sheetList" class="sheetList"></div></section>
+
+          <section class="layer apps" id="apps" aria-label="Apps"><div class="agrid" id="agrid"></div></section>
+
+          <section class="layer listen" id="listen" aria-label="Te escucho">
+            <div class="edge" aria-hidden="true"></div>
+            <div class="gamp big" id="glowListen" aria-hidden="true"><div class="glow live"><span class="g1"></span><span class="g2"></span><span class="g3"></span><span class="g4"></span></div></div>
+            <span class="lt" id="lsT">Te escucho</span><span class="ls" id="lsS">Háblame cuando quieras</span>
+            <button class="lbtn" data-act="listenDone" id="lsBtn">Listo</button>
+          </section>
+
+          <section class="layer view" id="view" aria-live="polite"></section>
+          <button class="banner" id="banner" data-act="banner"></button>
+          <div class="torch" id="torch" data-act="torch"></div>
+          <div class="oldsrv" id="oldSrv" role="status"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="panelside">
+    <div class="pcol">
+    <div class="card">
+      <h3>Pruébalo</h3>
+      <p class="lbl" style="margin:0 0 8px">Desliza sobre la pantalla o usa estos atajos. Toca una tarjeta para abrir su app.</p>
+      <div class="guide">
+        <button class="g" data-act="next"><span class="gk">←</span>Deslizar: agenda, esfera, tu día, radiación, corazón, energía</button>
+        <button class="g" data-act="quick"><span class="gk">↓</span>Bajar: accesos rápidos</button>
+        <button class="g" data-act="sheet"><span class="gk">↑</span>Subir: avisos</button>
+        <button class="g" data-act="crown"><span class="gk">◉</span>Corona: inicio y apps</button>
+        <button class="g" data-act="side"><span class="gk">▮</span>Botón lateral: hablar</button>
+      </div>
+      <button class="btn primary ptt" id="ptt">Mantén presionado para hablarle</button>
+      <label class="lbl" style="display:flex;align-items:center;gap:6px;margin-top:10px"><input type="checkbox" id="tts" checked>Respuesta hablada</label>
+    </div>
+    <div class="card"><h3>Tu voz frente a lo habitual</h3><div id="vres" class="muted" style="font-size:13px">Habla con el reloj para ver energía, tensión y ánimo.</div>
+      <button class="btn small" data-act="calibrate" style="margin-top:10px">Calibrar mi voz habitual</button></div>
+    </div>
+    <div class="pcol">
+    <div class="card"><h3>Activación por voz</h3>
+      <label class="lbl" style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text)"><input type="checkbox" id="wakeToggle">Escuchar “Hey Sanbosi”</label>
+      <p id="wakeState" class="lbl" style="margin:6px 0 2px"></p>
+      <p id="wakeHeard" class="lbl" data-notr style="margin:0 0 8px;min-height:16px;font-style:italic"></p>
+      <p class="lbl" style="margin:0;line-height:1.5">Di un saludo + “Sanbosi” y luego tu pregunta, o todo seguido: “Hey Sanbosi, ¿cómo está mi pulso?”. Responde en cuanto dejas de hablar.</p></div>
+    <div class="card"><h3>Qué decirle al reloj</h3><div id="cmdHelp" class="lbl" style="line-height:1.6"></div></div>
+    <div class="card"><h3>Lo que llega al reloj</h3><div class="list" id="feed" style="max-height:150px"></div></div>
+    </div>
+  </aside>
+</div>
+<script src="/static/lib.js"></script>
+<script src="/static/i18n.js"></script>
+<script src="/static/watch.js"></script>
+</body>
+</html>

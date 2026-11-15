@@ -1,0 +1,55 @@
+/* SANBOSI · sistema visual compartido con el diseño del reloj (canvas del equipo): Lexend, fondo negro, tarjetas #141416 */
+:root{
+  --bg:#0A0A0B; --side:#0E0E10; --card:#141416; --card2:#1A1A1D; --line:#1F1F22; --line2:#2A2A2E; --track:#26262A;
+  --text:#F2F2F0; --soft:#D6D3D1; --muted:#A8A29E; --dim:#78716C;
+  --accent:#4F7BFF; --link:#8FB0FF; --violet:#8B5CF6; --teal:#2DD4BF; --pink:#F472B6;
+  --ok:#8FD9A8; --ok-bg:#12261A; --obs:#9AB8FF; --obs-bg:#141B2E; --warn:#F2C27B; --warn-bg:#2A2112;
+  --crit:#FF8A7A; --crit-bg:#2E1613; --tech:#8CCBF0; --tech-bg:#13222B;
+  --cuerpo:#F49B8E; --mente:#B9A7F5; --comida:#8FD9A8; --rad:#E8D36B;
+  --hr:#F49B8E; --spo2:#8CCBF0; --temp:#F2C27B; --resp:#B9A7F5; --bp:#8FD9A8; --hrv:#E8D36B;
+  --radius:18px; --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:Lexend,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;font-weight:300}
+b,strong,h1,h2,h3{font-weight:500}
+a{color:var(--link);text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+.mono,.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)} .soft{color:var(--soft)} .dim{color:var(--dim)}
+.logo{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#4F7BFF 0%,#8B5CF6 55%,#2DD4BF 100%);flex-shrink:0}
+.brandname{font-size:17px;font-weight:600;letter-spacing:.04em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;min-width:0}
+.card h3{margin:0 0 12px;font-size:15px;font-weight:500;display:flex;align-items:center;gap:8px}
+.card h3 .r{margin-left:auto;font-size:12px;font-weight:300;color:var(--muted)}
+.lbl{font-size:12px;font-weight:300;color:var(--muted)}
+.val{font-size:17px;font-weight:400}
+.big{font-size:34px;font-weight:500;line-height:1.1}
+.pill{height:26px;padding:0 12px;border-radius:13px;display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:400;white-space:nowrap}
+.pill.lg{height:32px;padding:0 14px;border-radius:16px;font-size:13px}
+.pill .d{width:6px;height:6px;border-radius:50%;background:currentColor}
+.p-ok{background:var(--ok-bg);color:var(--ok)} .p-obs{background:var(--obs-bg);color:var(--obs)} .p-warn{background:var(--warn-bg);color:var(--warn)}
+.p-crit{background:var(--crit-bg);color:var(--crit)} .p-tech{background:var(--tech-bg);color:var(--tech)} .p-gray{background:#1C1C1E;color:var(--soft)}
+.p-inj{background:var(--crit-bg);color:var(--crit)}
+.c-ok{color:var(--ok)} .c-obs{color:var(--obs)} .c-warn{color:var(--warn)} .c-crit{color:var(--crit)} .c-tech{color:var(--tech)}
+.btn{height:40px;padding:0 16px;border-radius:12px;background:var(--card2);border:1px solid var(--line2);color:var(--text);font-size:14px;font-weight:400;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:hover{border-color:var(--accent)} .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.small{height:32px;padding:0 12px;font-size:13px;border-radius:10px} .btn.on{border-color:var(--crit);color:var(--crit)}
+.btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,select,textarea{background:#0E0E10;color:var(--text);border:1px solid var(--line2);border-radius:12px;padding:9px 12px;font-family:inherit;font-size:14px;font-weight:300}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:7px 14px;font-size:13px;margin:0}
+.kv dt{color:var(--muted)} .kv dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.list{display:flex;flex-direction:column;gap:8px;max-height:380px;overflow:auto;padding-right:4px}
+.list::-webkit-scrollbar{width:6px}.list::-webkit-scrollbar-thumb{background:var(--line2);border-radius:6px}
+.item{border:1px solid var(--line);background:#111113;border-radius:14px;padding:12px 14px}
+.item .t{display:flex;gap:10px;align-items:center;font-size:14px;font-weight:400}
+.item .t .when{margin-left:auto;color:var(--muted);font-size:12px;font-weight:300}
+.item .e{color:var(--muted);font-size:13px;margin-top:5px;line-height:1.45}
+.item .a{font-size:13px;margin-top:6px;color:var(--soft)}
+canvas{width:100%;display:block}
+.gauge{display:flex;flex-direction:column;align-items:center;gap:6px}
+.gauge svg{width:80px;height:80px}
+.gauge .l{font-size:12px;color:var(--soft)}
+@keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.fade{animation:fadeup .45s ease-out both}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}

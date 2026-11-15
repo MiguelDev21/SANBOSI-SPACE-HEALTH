@@ -1,0 +1,20 @@
+# entorno y cachés de Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# datos que genera la estación al correr (se crean solos)
+station/data/*.db
+station/data/*.db-*
+station/data/demo*/
+station/data/test/
+station/data/cache/*
+!station/data/cache/.keep
+*.log
+# framework DTN (interfaz web)
+dtn-framework/node_modules/
+dtn-framework/dist/
+# sistema
+.DS_Store
+Thumbs.db
+*.tar.gz

@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 230 55% 9%;          /* #0a0e27 - Deep navy background */
+    --foreground: 0 0% 91%;            /* #E8E8E8 - Light gray text */
+
+    --panel: 230 45% 16%;              /* #151b3d - Panel background */
+    --panel-foreground: 0 0% 91%;
+
+    --card: 230 45% 16%;
+    --card-foreground: 0 0% 91%;
+
+    --popover: 230 45% 16%;
+    --popover-foreground: 0 0% 91%;
+
+    --primary: 207 71% 58%;            
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 66%;          
+    --secondary-foreground: 0 0% 91%;
+
+    --muted: 210 25% 24%;              
+    --muted-foreground: 220 14% 66%;
+
+    --accent: 207 71% 58%;             
+    --accent-foreground: 0 0% 100%;
+
+    --success: 122 39% 49%;            
+    --success-foreground: 0 0% 100%;
+
+    --warning: 36 100% 50%;            
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 4 79% 56%;          
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 25% 24%;             
+    --input: 210 25% 24%;
+    --ring: 207 71% 58%;
+
+    --radius: 0rem;
+
+    --terminal-bg: 0 0% 0%;            
+    --terminal-text: 120 100% 40%;     
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Monospace for technical data */
+  .font-mono {
+    font-family: 'IBM Plex Mono', 'Roboto Mono', 'Courier New', monospace;
+  }
+
+  /* Terminal styling */
+  .terminal {
+    background-color: hsl(var(--terminal-bg));
+    color: hsl(var(--terminal-text));
+    font-family: 'IBM Plex Mono', monospace;
+  }
+}

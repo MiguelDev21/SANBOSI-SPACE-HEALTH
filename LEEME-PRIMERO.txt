@@ -1,0 +1,31 @@
+SANBOSI · Monitoreo de salud para astronautas (NASA Space Apps 2026 · equipo Sanbosi-FET)
+=====================================================================================
+
+LO ÚNICO QUE NECESITAS
+  - Python 3.11, 3.12 o 3.13  ->  https://www.python.org/downloads/
+    (en Windows marca la casilla "Add python.exe to PATH" al instalar)
+  - Internet la primera vez (para instalar dependencias y traer datos NASA en vivo)
+  - Chrome o Edge (la voz "Hola Sanbosi" solo funciona en esos navegadores)
+
+CÓMO ABRIRLO
+  Windows:  descomprime el .zip y haz doble clic en  "Abrir SANBOSI (Windows).bat"
+            (si Windows muestra "Windows protegió su PC": Más información -> Ejecutar de todas formas)
+  macOS:    doble clic en  "Abrir SANBOSI.command"
+            (si macOS lo bloquea: clic derecho -> Abrir)
+  Linux:    ./start.sh
+
+  La primera vez tarda unos minutos instalando. Luego se abren solos:
+    Panel de la estación   http://localhost:8700
+    Reloj del astronauta   http://localhost:8700/watch
+    Vista Tierra           http://localhost:8700/?ver=earth
+
+  Para apagar: en Windows presiona una tecla en la ventana negra; en Mac cierra la Terminal.
+
+IDIOMA
+  Panel: abajo a la izquierda (Español / English).  Reloj: arriba a la derecha (ES / EN).
+
+SI ALGO FALLA
+  - "No se encontró Python": instala Python marcando "Add python.exe to PATH" y vuelve a abrir.
+  - La página no carga: espera 10 segundos y recarga (F5).
+  - La voz no responde: usa Chrome o Edge y permite el micrófono cuando lo pida.
+  - Sin internet: funciona igual con datos simulados (lo indica en pantalla).

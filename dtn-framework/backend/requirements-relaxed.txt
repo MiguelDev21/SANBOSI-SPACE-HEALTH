@@ -1,0 +1,10 @@
+# Same deps as requirements.txt but without strict pins (works on Python 3.11-3.13 / macOS arm64).
+# Mininet is Linux-only and is NOT needed: the framework falls back to simulation mode.
+fastapi>=0.110
+uvicorn[standard]>=0.27
+websockets>=12
+python-dotenv>=1.0
+skyfield>=1.48
+numpy>=1.26
+requests>=2.31
+cryptography>=41

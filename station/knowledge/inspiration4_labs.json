@@ -1,0 +1,839 @@
+{
+ "source": {
+  "hemograma": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-569",
+  "panel_metabolico": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-575",
+  "mision": "SpaceX Inspiration4 (sept. 2021, 3 días en órbita)",
+  "fechas": [
+   "L-92",
+   "L-44",
+   "L-3",
+   "R+1",
+   "R+45",
+   "R+82",
+   "R+194"
+  ],
+  "nota": "Exámenes reales de tripulantes desidentificados (C001–C004); los nombres del demo son ficticios. En órbita no hubo exámenes clínicos."
+ },
+ "crew": {
+  "CM-01": {
+   "osdr_crew": "C001",
+   "labs": [
+    {
+     "key": "wbc",
+     "name": "Glóbulos blancos",
+     "unit": "×10³/µL",
+     "values": {
+      "L-92": 5.4,
+      "L-44": 5.5,
+      "L-3": 7,
+      "R+1": 5,
+      "R+45": 4.9,
+      "R+82": 4.9,
+      "R+194": 4.9
+     },
+     "lo": 3.8,
+     "hi": 10.8,
+     "baseline_pre": 5.97,
+     "r1": 5,
+     "change_r1_pct": -16.2,
+     "flag_r1": null
+    },
+    {
+     "key": "neut",
+     "name": "Neutrófilos",
+     "unit": "células/µL",
+     "values": {
+      "L-92": 2349,
+      "L-44": 2998,
+      "L-3": 3570,
+      "R+1": 2685,
+      "R+45": 2200,
+      "R+82": 1994,
+      "R+194": 2391
+     },
+     "lo": 1500,
+     "hi": 7800,
+     "baseline_pre": 2972.33,
+     "r1": 2685,
+     "change_r1_pct": -9.7,
+     "flag_r1": null
+    },
+    {
+     "key": "lymph",
+     "name": "Linfocitos",
+     "unit": "células/µL",
+     "values": {
+      "L-92": 2241,
+      "L-44": 1859,
+      "L-3": 2667,
+      "R+1": 1640,
+      "R+45": 2146,
+      "R+82": 2171,
+      "R+194": 1847
+     },
+     "lo": 850,
+     "hi": 3900,
+     "baseline_pre": 2255.67,
+     "r1": 1640,
+     "change_r1_pct": -27.3,
+     "flag_r1": null
+    },
+    {
+     "key": "hgb",
+     "name": "Hemoglobina",
+     "unit": "g/dL",
+     "values": {
+      "L-92": 14.1,
+      "L-44": 14.9,
+      "L-3": 14.7,
+      "R+1": 14.7,
+      "R+45": 14.3,
+      "R+82": 15.7,
+      "R+194": 14.1
+     },
+     "lo": 13.2,
+     "hi": 17.1,
+     "baseline_pre": 14.57,
+     "r1": 14.7,
+     "change_r1_pct": 0.9,
+     "flag_r1": null
+    },
+    {
+     "key": "hct",
+     "name": "Hematocrito",
+     "unit": "%",
+     "values": {
+      "L-92": 42.5,
+      "L-44": 45.1,
+      "L-3": 44.5,
+      "R+1": 43.6,
+      "R+45": 43.3,
+      "R+82": 46.1,
+      "R+194": 41.8
+     },
+     "lo": 38.5,
+     "hi": 50,
+     "baseline_pre": 44.03,
+     "r1": 43.6,
+     "change_r1_pct": -1.0,
+     "flag_r1": null
+    },
+    {
+     "key": "plt",
+     "name": "Plaquetas",
+     "unit": "×10³/µL",
+     "values": {
+      "L-92": 241,
+      "L-44": 237,
+      "L-3": 258,
+      "R+1": 227,
+      "R+45": 228,
+      "R+82": 257,
+      "R+194": 214
+     },
+     "lo": 140,
+     "hi": 400,
+     "baseline_pre": 245.33,
+     "r1": 227,
+     "change_r1_pct": -7.5,
+     "flag_r1": null
+    },
+    {
+     "key": "glucose",
+     "name": "Glucosa",
+     "unit": "mg/dL",
+     "values": {
+      "L-92": 83,
+      "L-44": 80,
+      "L-3": 69,
+      "R+1": 90,
+      "R+45": 84,
+      "R+82": 91,
+      "R+194": 87
+     },
+     "lo": 65,
+     "hi": 99,
+     "baseline_pre": 77.33,
+     "r1": 90,
+     "change_r1_pct": 16.4,
+     "flag_r1": null
+    },
+    {
+     "key": "sodium",
+     "name": "Sodio",
+     "unit": "mmol/L",
+     "values": {
+      "L-92": 141,
+      "L-44": 139,
+      "L-3": 142,
+      "R+1": 138,
+      "R+45": 138,
+      "R+82": 140,
+      "R+194": 137
+     },
+     "lo": 135,
+     "hi": 146,
+     "baseline_pre": 140.67,
+     "r1": 138,
+     "change_r1_pct": -1.9,
+     "flag_r1": null
+    },
+    {
+     "key": "potassium",
+     "name": "Potasio",
+     "unit": "mmol/L",
+     "values": {
+      "L-92": 4.6,
+      "L-44": 4.2,
+      "L-3": 3.9,
+      "R+1": 4.4,
+      "R+45": 4,
+      "R+82": 4.3,
+      "R+194": 4.3
+     },
+     "lo": 3.5,
+     "hi": 5.3,
+     "baseline_pre": 4.23,
+     "r1": 4.4,
+     "change_r1_pct": 4.0,
+     "flag_r1": null
+    },
+    {
+     "key": "albumin",
+     "name": "Albúmina",
+     "unit": "g/dL",
+     "values": {
+      "L-92": 5,
+      "L-44": 5,
+      "L-3": 4.9,
+      "R+1": 4.9,
+      "R+45": 4.9,
+      "R+82": 5.1,
+      "R+194": 4.6
+     },
+     "lo": 3.6,
+     "hi": 5.1,
+     "baseline_pre": 4.97,
+     "r1": 4.9,
+     "change_r1_pct": -1.4,
+     "flag_r1": null
+    }
+   ]
+  },
+  "CM-02": {
+   "osdr_crew": "C002",
+   "labs": [
+    {
+     "key": "wbc",
+     "name": "Glóbulos blancos",
+     "unit": "×10³/µL",
+     "values": {
+      "L-92": 6.5,
+      "L-44": 5.4,
+      "L-3": 7.2,
+      "R+1": 5.5,
+      "R+45": 6.4,
+      "R+82": 5.3,
+      "R+194": 6.4
+     },
+     "lo": 3.8,
+     "hi": 10.8,
+     "baseline_pre": 6.37,
+     "r1": 5.5,
+     "change_r1_pct": -13.7,
+     "flag_r1": null
+    },
+    {
+     "key": "neut",
+     "name": "Neutrófilos",
+     "unit": "células/µL",
+     "values": {
+      "L-92": 3705,
+      "L-44": 2873,
+      "L-3": 3701,
+      "R+1": 3328,
+      "R+45": 2765,
+      "R+82": 3132,
+      "R+194": 3123
+     },
+     "lo": 1500,
+     "hi": 7800,
+     "baseline_pre": 3426.33,
+     "r1": 3328,
+     "change_r1_pct": -2.9,
+     "flag_r1": null
+    },
+    {
+     "key": "lymph",
+     "name": "Linfocitos",
+     "unit": "células/µL",
+     "values": {
+      "L-92": 2119,
+      "L-44": 1982,
+      "L-3": 2873,
+      "R+1": 1540,
+      "R+45": 2874,
+      "R+82": 1701,
+      "R+194": 2573
+     },
+     "lo": 850,
+     "hi": 3900,
+     "baseline_pre": 2324.67,
+     "r1": 1540,
+     "change_r1_pct": -33.8,
+     "flag_r1": null
+    },
+    {
+     "key": "hgb",
+     "name": "Hemoglobina",
+     "unit": "g/dL",
+     "values": {
+      "L-92": 13.2,
+      "L-44": 12.8,
+      "L-3": 11.5,
+      "R+1": 12.1,
+      "R+45": 12.2,
+      "R+82": 11.5,
+      "R+194": 12.7
+     },
+     "lo": 11.7,
+     "hi": 15.5,
+     "baseline_pre": 12.5,
+     "r1": 12.1,
+     "change_r1_pct": -3.2,
+     "flag_r1": null
+    },
+    {
+     "key": "hct",
+     "name": "Hematocrito",
+     "unit": "%",
+     "values": {
+      "L-92": 40.8,
+      "L-44": 37.8,
+      "L-3": 35.9,
+      "R+1": 36.4,
+      "R+45": 37.1,
+      "R+82": 34.7,
+      "R+194": 38.3
+     },
+     "lo": 35,
+     "hi": 45,
+     "baseline_pre": 38.17,
+     "r1": 36.4,
+     "change_r1_pct": -4.6,
+     "flag_r1": null
+    },
+    {
+     "key": "plt",
+     "name": "Plaquetas",
+     "unit": "×10³/µL",
+     "values": {
+      "L-92": 241,
+      "L-44": 229,
+      "L-3": 241,
+      "R+1": 252,
+      "R+45": 252,
+      "R+82": 245,
+      "R+194": 243
+     },
+     "lo": 140,
+     "hi": 400,
+     "baseline_pre": 237.0,
+     "r1": 252,
+     "change_r1_pct": 6.3,
+     "flag_r1": null
+    },
+    {
+     "key": "glucose",
+     "name": "Glucosa",
+     "unit": "mg/dL",
+     "values": {
+      "L-92": 69,
+      "L-44": 72,
+      "L-3": 78,
+      "R+1": 83,
+      "R+45": 44,
+      "R+82": 77,
+      "R+194": 84
+     },
+     "lo": 65,
+     "hi": 99,
+     "baseline_pre": 73.0,
+     "r1": 83,
+     "change_r1_pct": 13.7,
+     "flag_r1": null
+    },
+    {
+     "key": "sodium",
+     "name": "Sodio",
+     "unit": "mmol/L",
+     "values": {
+      "L-92": 142,
+      "L-44": 141,
+      "L-3": 143,
+      "R+1": 137,
+      "R+45": 140,
+      "R+82": 141,
+      "R+194": 138
+     },
+     "lo": 135,
+     "hi": 146,
+     "baseline_pre": 142.0,
+     "r1": 137,
+     "change_r1_pct": -3.5,
+     "flag_r1": null
+    },
+    {
+     "key": "potassium",
+     "name": "Potasio",
+     "unit": "mmol/L",
+     "values": {
+      "L-92": 3.9,
+      "L-44": 4,
+      "L-3": 3.8,
+      "R+1": 3.5,
+      "R+45": 4.1,
+      "R+82": 3.7,
+      "R+194": 4.4
+     },
+     "lo": 3.5,
+     "hi": 5.3,
+     "baseline_pre": 3.9,
+     "r1": 3.5,
+     "change_r1_pct": -10.3,
+     "flag_r1": null
+    },
+    {
+     "key": "albumin",
+     "name": "Albúmina",
+     "unit": "g/dL",
+     "values": {
+      "L-92": 4.9,
+      "L-44": 4.6,
+      "L-3": 4.3,
+      "R+1": 4.4,
+      "R+45": 4.2,
+      "R+82": 4.5,
+      "R+194": 4.3
+     },
+     "lo": 3.6,
+     "hi": 5.1,
+     "baseline_pre": 4.6,
+     "r1": 4.4,
+     "change_r1_pct": -4.3,
+     "flag_r1": null
+    }
+   ]
+  },
+  "CM-03": {
+   "osdr_crew": "C003",
+   "labs": [
+    {
+     "key": "wbc",
+     "name": "Glóbulos blancos",
+     "unit": "×10³/µL",
+     "values": {
+      "L-92": 9.6,
+      "L-44": 9.3,
+      "L-3": 9.8,
+      "R+1": 7,
+      "R+45": 7.8,
+      "R+82": 8.8,
+      "R+194": 7.4
+     },
+     "lo": 3.8,
+     "hi": 10.8,
+     "baseline_pre": 9.57,
+     "r1": 7,
+     "change_r1_pct": -26.9,
+     "flag_r1": null
+    },
+    {
+     "key": "neut",
+     "name": "Neutrófilos",
+     "unit": "células/µL",
+     "values": {
+      "L-92": null,
+      "L-44": 6408,
+      "L-3": 5792,
+      "R+1": 4088,
+      "R+45": 4618,
+      "R+82": 4576,
+      "R+194": 4151
+     },
+     "lo": 1500,
+     "hi": 7800,
+     "baseline_pre": 6100.0,
+     "r1": 4088,
+     "change_r1_pct": -33.0,
+     "flag_r1": null
+    },
+    {
+     "key": "lymph",
+     "name": "Linfocitos",
+     "unit": "células/µL",
+     "values": {
+      "L-92": null,
+      "L-44": 2083,
+      "L-3": 3156,
+      "R+1": 2086,
+      "R+45": 2379,
+      "R+82": 3247,
+      "R+194": 2220
+     },
+     "lo": 850,
+     "hi": 3900,
+     "baseline_pre": 2619.5,
+     "r1": 2086,
+     "change_r1_pct": -20.4,
+     "flag_r1": null
+    },
+    {
+     "key": "hgb",
+     "name": "Hemoglobina",
+     "unit": "g/dL",
+     "values": {
+      "L-92": 13.2,
+      "L-44": 14.4,
+      "L-3": 13.3,
+      "R+1": 13.5,
+      "R+45": 14.6,
+      "R+82": 14.4,
+      "R+194": 13.3
+     },
+     "lo": 11.7,
+     "hi": 15.5,
+     "baseline_pre": 13.63,
+     "r1": 13.5,
+     "change_r1_pct": -1.0,
+     "flag_r1": null
+    },
+    {
+     "key": "hct",
+     "name": "Hematocrito",
+     "unit": "%",
+     "values": {
+      "L-92": 40.7,
+      "L-44": 42.6,
+      "L-3": 41.6,
+      "R+1": 41.4,
+      "R+45": 44.3,
+      "R+82": 44.6,
+      "R+194": 40.4
+     },
+     "lo": 35,
+     "hi": 45,
+     "baseline_pre": 41.63,
+     "r1": 41.4,
+     "change_r1_pct": -0.6,
+     "flag_r1": null
+    },
+    {
+     "key": "plt",
+     "name": "Plaquetas",
+     "unit": "×10³/µL",
+     "values": {
+      "L-92": null,
+      "L-44": 345,
+      "L-3": 367,
+      "R+1": 359,
+      "R+45": 396,
+      "R+82": 345,
+      "R+194": 185
+     },
+     "lo": 140,
+     "hi": 400,
+     "baseline_pre": 356.0,
+     "r1": 359,
+     "change_r1_pct": 0.8,
+     "flag_r1": null
+    },
+    {
+     "key": "glucose",
+     "name": "Glucosa",
+     "unit": "mg/dL",
+     "values": {
+      "L-92": 77,
+      "L-44": 62,
+      "L-3": 75,
+      "R+1": 103,
+      "R+45": 36,
+      "R+82": 80,
+      "R+194": 73
+     },
+     "lo": 65,
+     "hi": 99,
+     "baseline_pre": 71.33,
+     "r1": 103,
+     "change_r1_pct": 44.4,
+     "flag_r1": "alto"
+    },
+    {
+     "key": "sodium",
+     "name": "Sodio",
+     "unit": "mmol/L",
+     "values": {
+      "L-92": 139,
+      "L-44": 139,
+      "L-3": 138,
+      "R+1": 137,
+      "R+45": 136,
+      "R+82": 138,
+      "R+194": 137
+     },
+     "lo": 135,
+     "hi": 146,
+     "baseline_pre": 138.67,
+     "r1": 137,
+     "change_r1_pct": -1.2,
+     "flag_r1": null
+    },
+    {
+     "key": "potassium",
+     "name": "Potasio",
+     "unit": "mmol/L",
+     "values": {
+      "L-92": 3.7,
+      "L-44": 3.5,
+      "L-3": 3.3,
+      "R+1": 3,
+      "R+45": 4.4,
+      "R+82": 3.7,
+      "R+194": 3.8
+     },
+     "lo": 3.5,
+     "hi": 5.3,
+     "baseline_pre": 3.5,
+     "r1": 3,
+     "change_r1_pct": -14.3,
+     "flag_r1": "bajo"
+    },
+    {
+     "key": "albumin",
+     "name": "Albúmina",
+     "unit": "g/dL",
+     "values": {
+      "L-92": 4.4,
+      "L-44": 4.9,
+      "L-3": 4.2,
+      "R+1": 4.2,
+      "R+45": 4.5,
+      "R+82": 4.8,
+      "R+194": 4.4
+     },
+     "lo": 3.6,
+     "hi": 5.1,
+     "baseline_pre": 4.5,
+     "r1": 4.2,
+     "change_r1_pct": -6.7,
+     "flag_r1": null
+    }
+   ]
+  },
+  "CM-04": {
+   "osdr_crew": "C004",
+   "labs": [
+    {
+     "key": "wbc",
+     "name": "Glóbulos blancos",
+     "unit": "×10³/µL",
+     "values": {
+      "L-92": 7.7,
+      "L-44": 6.4,
+      "L-3": 10.6,
+      "R+1": 8.1,
+      "R+45": 6.8,
+      "R+82": 7.9,
+      "R+194": 8.3
+     },
+     "lo": 3.8,
+     "hi": 10.8,
+     "baseline_pre": 8.23,
+     "r1": 8.1,
+     "change_r1_pct": -1.6,
+     "flag_r1": null
+    },
+    {
+     "key": "neut",
+     "name": "Neutrófilos",
+     "unit": "células/µL",
+     "values": {
+      "L-92": 4766,
+      "L-44": 3699,
+      "L-3": 6318,
+      "R+1": 4528,
+      "R+45": 3618,
+      "R+82": 4361,
+      "R+194": 4200
+     },
+     "lo": 1500,
+     "hi": 7800,
+     "baseline_pre": 4927.67,
+     "r1": 4528,
+     "change_r1_pct": -8.1,
+     "flag_r1": null
+    },
+    {
+     "key": "lymph",
+     "name": "Linfocitos",
+     "unit": "células/µL",
+     "values": {
+      "L-92": 1786,
+      "L-44": 1613,
+      "L-3": 2947,
+      "R+1": 2155,
+      "R+45": 1938,
+      "R+82": 2307,
+      "R+194": 2639
+     },
+     "lo": 850,
+     "hi": 3900,
+     "baseline_pre": 2115.33,
+     "r1": 2155,
+     "change_r1_pct": 1.9,
+     "flag_r1": null
+    },
+    {
+     "key": "hgb",
+     "name": "Hemoglobina",
+     "unit": "g/dL",
+     "values": {
+      "L-92": 17,
+      "L-44": 16.6,
+      "L-3": 16.8,
+      "R+1": 16.5,
+      "R+45": 16.8,
+      "R+82": 16.4,
+      "R+194": 16.5
+     },
+     "lo": 13.2,
+     "hi": 17.1,
+     "baseline_pre": 16.8,
+     "r1": 16.5,
+     "change_r1_pct": -1.8,
+     "flag_r1": null
+    },
+    {
+     "key": "hct",
+     "name": "Hematocrito",
+     "unit": "%",
+     "values": {
+      "L-92": 49.1,
+      "L-44": 50,
+      "L-3": 49,
+      "R+1": 48.3,
+      "R+45": 49,
+      "R+82": 47.5,
+      "R+194": 48
+     },
+     "lo": 38.5,
+     "hi": 50,
+     "baseline_pre": 49.37,
+     "r1": 48.3,
+     "change_r1_pct": -2.2,
+     "flag_r1": null
+    },
+    {
+     "key": "plt",
+     "name": "Plaquetas",
+     "unit": "×10³/µL",
+     "values": {
+      "L-92": 239,
+      "L-44": 227,
+      "L-3": 295,
+      "R+1": 240,
+      "R+45": 281,
+      "R+82": 198,
+      "R+194": 256
+     },
+     "lo": 140,
+     "hi": 400,
+     "baseline_pre": 253.67,
+     "r1": 240,
+     "change_r1_pct": -5.4,
+     "flag_r1": null
+    },
+    {
+     "key": "glucose",
+     "name": "Glucosa",
+     "unit": "mg/dL",
+     "values": {
+      "L-92": 100,
+      "L-44": 83,
+      "L-3": 56,
+      "R+1": 97,
+      "R+45": 43,
+      "R+82": 80,
+      "R+194": 84
+     },
+     "lo": 65,
+     "hi": 99,
+     "baseline_pre": 79.67,
+     "r1": 97,
+     "change_r1_pct": 21.8,
+     "flag_r1": null
+    },
+    {
+     "key": "sodium",
+     "name": "Sodio",
+     "unit": "mmol/L",
+     "values": {
+      "L-92": 138,
+      "L-44": 140,
+      "L-3": 141,
+      "R+1": 140,
+      "R+45": 139,
+      "R+82": 140,
+      "R+194": 141
+     },
+     "lo": 135,
+     "hi": 146,
+     "baseline_pre": 139.67,
+     "r1": 140,
+     "change_r1_pct": 0.2,
+     "flag_r1": null
+    },
+    {
+     "key": "potassium",
+     "name": "Potasio",
+     "unit": "mmol/L",
+     "values": {
+      "L-92": 4.2,
+      "L-44": 4.2,
+      "L-3": 3.7,
+      "R+1": 4,
+      "R+45": 5.9,
+      "R+82": 4.2,
+      "R+194": 3.8
+     },
+     "lo": 3.5,
+     "hi": 5.3,
+     "baseline_pre": 4.03,
+     "r1": 4,
+     "change_r1_pct": -0.7,
+     "flag_r1": null
+    },
+    {
+     "key": "albumin",
+     "name": "Albúmina",
+     "unit": "g/dL",
+     "values": {
+      "L-92": 4.6,
+      "L-44": 4.4,
+      "L-3": 4.6,
+      "R+1": 4.5,
+      "R+45": 4.5,
+      "R+82": 4.6,
+      "R+194": 4.3
+     },
+     "lo": 3.6,
+     "hi": 5.1,
+     "baseline_pre": 4.53,
+     "r1": 4.5,
+     "change_r1_pct": -0.7,
+     "flag_r1": null
+    }
+   ]
+  }
+ }
+}

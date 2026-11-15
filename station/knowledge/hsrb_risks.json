@@ -1,0 +1,794 @@
+{
+ "_source": "NASA Human System Risk Board (https://www.nasa.gov/hhp/human-system-risks/) y OCHMO Fundamentals of Human Health (https://www.nasa.gov/reference/fundamentals-of-human-health/). Textos resumidos en español por el equipo; los umbrales numéricos del motor de reglas están en station/config.py y deben validarse contra NASA-STD-3001.",
+ "hazards": [
+  "Radiación espacial",
+  "Aislamiento y confinamiento",
+  "Distancia a la Tierra",
+  "Gravedad alterada",
+  "Ambiente cerrado y hostil"
+ ],
+ "risks": [
+  {
+   "id": "CV",
+   "name": "Cardiovascular",
+   "category": "Médico",
+   "desc": "Adaptaciones del corazón y vasos que afectan desempeño y salud: arritmias, desacondicionamiento, cambios de presión.",
+   "watch_signals": [
+    "hr",
+    "rr_intervals",
+    "sbp",
+    "dbp"
+   ],
+   "countermeasures": [
+    "Ejercicio aeróbico y de resistencia diario",
+    "ECG de 12 derivaciones si hay arritmia sostenida",
+    "Consulta con cirujano de vuelo"
+   ],
+   "keywords": [
+    "palpitaciones",
+    "corazón",
+    "pecho",
+    "taquicardia",
+    "me late muy rápido",
+    "dolor en el pecho"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [
+    "chest pain",
+    "heart racing",
+    "palpitations",
+    "my heart"
+   ],
+   "desc_en": "Heart and blood vessel adaptations that affect health and performance: arrhythmias, deconditioning and blood pressure changes."
+  },
+  {
+   "id": "OI",
+   "name": "Intolerancia ortostática",
+   "category": "Médico",
+   "desc": "Pre-síncope o síncope al volver a la gravedad por menor volumen plasmático y disfunción simpática.",
+   "watch_signals": [
+    "hr",
+    "sbp"
+   ],
+   "countermeasures": [
+    "Carga de fluidos y sal antes del reingreso",
+    "Prendas de compresión",
+    "Posición supina si hay síntomas"
+   ],
+   "keywords": [
+    "mareo al pararme",
+    "desmayo",
+    "me voy a desmayar"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-019-orthostatic-intolerance.pdf",
+   "keywords_en": [
+    "dizzy when i stand",
+    "about to faint",
+    "fainted"
+   ],
+   "desc_en": "Feeling faint or fainting when returning to gravity, due to lower plasma volume and nervous system changes."
+  },
+  {
+   "id": "VTE",
+   "name": "Tromboembolismo venoso",
+   "category": "Médico",
+   "desc": "Flujo alterado en la vena yugular interna (estancado o retrógrado) y trombos raros en microgravedad.",
+   "watch_signals": [
+    "hr",
+    "spo2",
+    "resp_rate"
+   ],
+   "countermeasures": [
+    "Ultrasonido de vena yugular a bordo",
+    "Algoritmo NASA de evaluación y tratamiento de trombosis"
+   ],
+   "keywords": [
+    "dolor en el cuello",
+    "cuello hinchado",
+    "pierna hinchada",
+    "falta de aire",
+    "duele el cuello"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2026/01/ochmo-mtb-007-venous-thrombosis-in-spaceflight.pdf",
+   "keywords_en": [
+    "neck pain",
+    "swollen leg",
+    "neck hurts"
+   ],
+   "desc_en": "Altered blood flow in the internal jugular vein (stagnant or reversed) and rare clots in microgravity."
+  },
+  {
+   "id": "HYPOXIA",
+   "name": "Hipoxia",
+   "category": "Médico",
+   "desc": "Reducción de salud y desempeño por bajo oxígeno (cabina, traje o pulmonar).",
+   "watch_signals": [
+    "spo2",
+    "resp_rate",
+    "hr"
+   ],
+   "countermeasures": [
+    "Verificar ppO2 de cabina/traje",
+    "Oxígeno suplementario",
+    "Suspender actividad física"
+   ],
+   "keywords": [
+    "no puedo respirar",
+    "me falta el aire",
+    "ahogo",
+    "me ahogo",
+    "no me alcanza el aire"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [
+    "can't breathe",
+    "cannot breathe",
+    "short of breath",
+    "out of breath"
+   ],
+   "desc_en": "Reduced health and performance from low oxygen in the cabin, the suit or the lungs."
+  },
+  {
+   "id": "CO2",
+   "name": "Exposición a CO2",
+   "category": "Ambiental",
+   "desc": "Efectos en salud y desempeño por CO2 ambiental en vehículos y trajes: cefalea, letargo, errores cognitivos.",
+   "watch_signals": [
+    "resp_rate",
+    "hr"
+   ],
+   "countermeasures": [
+    "Verificar CDRA/scrubbers",
+    "Aumentar ventilación local",
+    "Reducir carga de trabajo hasta normalizar"
+   ],
+   "keywords": [
+    "dolor de cabeza",
+    "cefalea",
+    "aturdido",
+    "pesadez",
+    "duele la cabeza",
+    "jaqueca"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2025/02/suited-co2-technical-bulletin-02182025.pdf",
+   "keywords_en": [
+    "headache",
+    "head hurts",
+    "my head hurts",
+    "foggy"
+   ],
+   "desc_en": "Health and performance effects of carbon dioxide in vehicles and suits: headache, lethargy and thinking errors."
+  },
+  {
+   "id": "RAD",
+   "name": "Carcinogénesis por radiación",
+   "category": "Ambiental",
+   "desc": "Riesgo de cáncer y efectos degenerativos (corazón, vasos, ojos, sistema nervioso) por radiación espacial.",
+   "watch_signals": [
+    "dose_rate"
+   ],
+   "countermeasures": [
+    "Refugio en módulo con más blindaje durante eventos solares",
+    "Postergar EVA",
+    "Registro de dosis personal (dosímetro activo)"
+   ],
+   "keywords": [
+    "radiación",
+    "tormenta solar",
+    "dosis"
+   ],
+   "url": "https://www.nasa.gov/reference/risk-of-radiation-induced-cancers/",
+   "keywords_en": [],
+   "desc_en": "Cancer risk and degenerative effects on the heart, blood vessels, eyes and nervous system caused by space radiation."
+  },
+  {
+   "id": "SLEEP",
+   "name": "Sueño, ritmo circadiano y carga de trabajo",
+   "category": "Conductual",
+   "desc": "Privación de sueño, disrupción circadiana y sobrecarga que causan fatiga y errores.",
+   "watch_signals": [
+    "rmssd",
+    "hr",
+    "activity",
+    "voice_fatigue"
+   ],
+   "countermeasures": [
+    "Ajuste de horario y siesta programada",
+    "Higiene lumínica",
+    "Redistribuir tareas críticas"
+   ],
+   "keywords": [
+    "cansado",
+    "agotado",
+    "no dormí",
+    "no puedo dormir",
+    "sueño",
+    "fatiga",
+    "cansada",
+    "agotada",
+    "no he dormido",
+    "insomnio"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-041-sleep-accommodations.pdf",
+   "keywords_en": [
+    "tired",
+    "exhausted",
+    "didn't sleep",
+    "did not sleep",
+    "can't sleep",
+    "sleepy",
+    "fatigued"
+   ],
+   "desc_en": "Sleep loss, circadian disruption and overwork that cause fatigue and mistakes."
+  },
+  {
+   "id": "BHP",
+   "name": "Salud conductual",
+   "category": "Conductual",
+   "desc": "Cambios cognitivos, conductuales o psiquiátricos en ambientes aislados, confinados y extremos (ICE).",
+   "watch_signals": [
+    "voice_stress",
+    "voice_mood",
+    "rmssd"
+   ],
+   "countermeasures": [
+    "Conferencia privada con psicología de soporte",
+    "Tiempo de recreación y contacto familiar",
+    "Técnicas de respiración"
+   ],
+   "keywords": [
+    "triste",
+    "ansioso",
+    "ansiedad",
+    "solo",
+    "estresado",
+    "irritable",
+    "deprimido",
+    "ansiosa",
+    "estresada",
+    "sola",
+    "deprimida",
+    "nervioso",
+    "nerviosa",
+    "extraño a mi familia"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-016-behavioral-health.pdf",
+   "keywords_en": [
+    "sad",
+    "anxious",
+    "lonely",
+    "stressed",
+    "depressed",
+    "nervous",
+    "miss my family",
+    "irritable"
+   ],
+   "desc_en": "Cognitive, behavioral or psychiatric changes in isolated, confined and extreme environments."
+  },
+  {
+   "id": "TEAM",
+   "name": "Equipo",
+   "category": "Conductual",
+   "desc": "Problemas de desempeño por mala coordinación o adaptación del equipo.",
+   "watch_signals": [
+    "voice_stress"
+   ],
+   "countermeasures": [
+    "Debriefing de tripulación",
+    "Protocolos de comunicación"
+   ],
+   "keywords": [
+    "discusión",
+    "conflicto",
+    "pelea"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [],
+   "desc_en": "Performance problems from poor team coordination or adaptation."
+  },
+  {
+   "id": "EVA",
+   "name": "Operaciones EVA",
+   "category": "Operacional",
+   "desc": "Lesión y pérdida de desempeño durante caminatas espaciales (sobreesfuerzo, térmico, traje).",
+   "watch_signals": [
+    "hr",
+    "metabolic_rate",
+    "suit_ppco2",
+    "suit_pressure"
+   ],
+   "countermeasures": [
+    "Pausa de trabajo y control de ritmo",
+    "Ajustar refrigeración LCVG",
+    "Abortar EVA si persiste"
+   ],
+   "keywords": [
+    "calor en el traje",
+    "muy cansado",
+    "me cuesta"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [
+    "too hot in the suit"
+   ],
+   "desc_en": "Injury and loss of performance during spacewalks from overexertion, heat or the suit."
+  },
+  {
+   "id": "DCS",
+   "name": "Enfermedad por descompresión",
+   "category": "Médico",
+   "desc": "Burbujas de gas durante EVA con traje a baja presión; se mitiga con pre-respiración de O2.",
+   "watch_signals": [
+    "suit_pressure",
+    "symptoms"
+   ],
+   "countermeasures": [
+    "Repressurizar el traje",
+    "Terminar EVA y tratamiento con O2",
+    "Notificar a cirujano de vuelo"
+   ],
+   "keywords": [
+    "dolor de rodilla",
+    "dolor en el hombro",
+    "dolor en el codo",
+    "dolor de articulación",
+    "hormigueo",
+    "duele la rodilla",
+    "duele el hombro",
+    "duele el codo",
+    "duelen las articulaciones"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-037-decompression-sickness.pdf",
+   "keywords_en": [
+    "knee pain",
+    "shoulder pain",
+    "elbow pain",
+    "joint pain",
+    "tingling",
+    "knee hurts",
+    "shoulder hurts"
+   ],
+   "desc_en": "Gas bubbles in the body during spacewalks in low-pressure suits; prevented by breathing pure oxygen beforehand."
+  },
+  {
+   "id": "IMM",
+   "name": "Inmunológico",
+   "category": "Médico",
+   "desc": "Cambios del sistema inmune que afectan la salud en misión y a largo plazo; reactivación viral.",
+   "watch_signals": [
+    "skin_temp",
+    "hr"
+   ],
+   "countermeasures": [
+    "Control de temperatura seriado",
+    "Aislamiento relativo si hay infección",
+    "Kit médico: antipiréticos según protocolo"
+   ],
+   "keywords": [
+    "fiebre",
+    "escalofríos",
+    "gripa",
+    "infección",
+    "tengo frío",
+    "temblores"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [
+    "fever",
+    "chills",
+    "infection",
+    "feel sick"
+   ],
+   "desc_en": "Immune system changes that affect health during and after the mission, including virus reactivation."
+  },
+  {
+   "id": "MICRO",
+   "name": "Interacción huésped-microorganismo",
+   "category": "Médico",
+   "desc": "Efectos en salud por microbios en un ambiente cerrado.",
+   "watch_signals": [
+    "skin_temp"
+   ],
+   "countermeasures": [
+    "Muestreo microbiano ambiental",
+    "Higiene de superficies"
+   ],
+   "keywords": [
+    "sarpullido",
+    "piel irritada"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [],
+   "desc_en": "Health effects from microbes in a closed environment."
+  },
+  {
+   "id": "IMC",
+   "name": "Condiciones médicas en vuelo",
+   "category": "Médico",
+   "desc": "Resultados de salud y pérdida de desempeño por eventos médicos en vuelo.",
+   "watch_signals": [
+    "hr",
+    "spo2",
+    "skin_temp",
+    "sbp"
+   ],
+   "countermeasures": [
+    "Protocolo del kit médico ISS",
+    "Telemedicina cuando hay enlace"
+   ],
+   "keywords": [
+    "dolor",
+    "me siento mal",
+    "vómito"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [
+    "i feel bad",
+    "i feel unwell",
+    "pain"
+   ],
+   "desc_en": "Health outcomes and lost performance from medical events in flight."
+  },
+  {
+   "id": "EIHSO",
+   "name": "Operaciones independientes de la Tierra (EIHSO)",
+   "category": "Operacional",
+   "desc": "Resultados de misión cuando hay que operar sin soporte en tiempo real desde la Tierra.",
+   "watch_signals": [
+    "dtn_link"
+   ],
+   "countermeasures": [
+    "Diagnóstico a bordo (este sistema)",
+    "Protocolos autónomos",
+    "Sincronización DTN al recuperar enlace"
+   ],
+   "keywords": [
+    "sin señal",
+    "houston"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [],
+   "desc_en": "Mission outcomes when the crew must operate without real-time support from Earth."
+  },
+  {
+   "id": "SM",
+   "name": "Sensoriomotor",
+   "category": "Médico",
+   "desc": "Función vestibular alterada: mareo espacial (hasta 73% en los primeros 2-3 días), desorientación, control postural.",
+   "watch_signals": [
+    "activity",
+    "hr"
+   ],
+   "countermeasures": [
+    "Restricción de movimientos de cabeza",
+    "Medicación antimareo según protocolo"
+   ],
+   "keywords": [
+    "mareo",
+    "náusea",
+    "nauseas",
+    "vértigo",
+    "desorientado",
+    "me da vueltas",
+    "ganas de vomitar"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2025/09/ochmo-mtb-004-space-adaptation-sickness-sas.pdf",
+   "keywords_en": [
+    "dizzy",
+    "nausea",
+    "nauseous",
+    "vertigo",
+    "want to vomit"
+   ],
+   "desc_en": "Altered balance system: space motion sickness (up to 73% of crew in the first 2–3 days), disorientation and posture control."
+  },
+  {
+   "id": "SANS",
+   "name": "Síndrome neuro-ocular (SANS)",
+   "category": "Médico",
+   "desc": "Edema del disco óptico, aplanamiento del globo y cambios refractivos por desplazamiento de fluidos.",
+   "watch_signals": [
+    "symptoms"
+   ],
+   "countermeasures": [
+    "Examen de fondo de ojo / OCT a bordo",
+    "Registro de agudeza visual"
+   ],
+   "keywords": [
+    "visión borrosa",
+    "veo borroso",
+    "no enfoco",
+    "presión en los ojos"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2024/02/ochmo-mtb-001-sans.pdf",
+   "keywords_en": [
+    "blurry vision",
+    "blurred vision",
+    "can't focus my eyes"
+   ],
+   "desc_en": "Optic disc swelling, eyeball flattening and vision changes caused by fluids shifting toward the head."
+  },
+  {
+   "id": "RENAL",
+   "name": "Cálculos renales",
+   "category": "Médico",
+   "desc": "Mayor riesgo de cálculos por deshidratación relativa y excreción de calcio; 2ª causa probable de evacuación médica (IMM).",
+   "watch_signals": [
+    "hr",
+    "skin_temp",
+    "hydration"
+   ],
+   "countermeasures": [
+    "Meta de hidratación diaria",
+    "Citrato de potasio según protocolo",
+    "Ultrasonido renal"
+   ],
+   "keywords": [
+    "dolor en el costado",
+    "dolor lumbar",
+    "orina oscura",
+    "ardor al orinar",
+    "duele el costado",
+    "duele la espalda baja"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2025/01/ochmo-mtb-003-urinary-health.pdf",
+   "keywords_en": [
+    "back pain",
+    "flank pain",
+    "dark urine",
+    "burning when i pee",
+    "thirsty"
+   ],
+   "desc_en": "Higher risk of kidney stones from relative dehydration and calcium loss; a likely cause of medical evacuation."
+  },
+  {
+   "id": "URIN",
+   "name": "Retención urinaria",
+   "category": "Médico",
+   "desc": "Incapacidad de vaciar la vejiga, más frecuente al inicio del vuelo.",
+   "watch_signals": [
+    "symptoms"
+   ],
+   "countermeasures": [
+    "Cateterismo según protocolo"
+   ],
+   "keywords": [
+    "no puedo orinar"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2025/01/ochmo-mtb-003-urinary-health.pdf",
+   "keywords_en": [
+    "can't pee",
+    "cannot urinate"
+   ],
+   "desc_en": "Inability to empty the bladder, more common early in flight."
+  },
+  {
+   "id": "AEROBIC",
+   "name": "Capacidad aeróbica",
+   "category": "Médico",
+   "desc": "Menor desempeño físico por caída de la capacidad aeróbica.",
+   "watch_signals": [
+    "hr",
+    "hr_recovery"
+   ],
+   "countermeasures": [
+    "Prescripción de ejercicio en cinta/cicloergómetro"
+   ],
+   "keywords": [
+    "me canso rápido"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-031-exercise-overview.pdf",
+   "keywords_en": [],
+   "desc_en": "Lower physical performance from a drop in aerobic capacity."
+  },
+  {
+   "id": "MUSCLE",
+   "name": "Músculo",
+   "category": "Médico",
+   "desc": "Pérdida de masa y fuerza muscular.",
+   "watch_signals": [
+    "activity"
+   ],
+   "countermeasures": [
+    "Ejercicio de resistencia (ARED)"
+   ],
+   "keywords": [
+    "debilidad",
+    "sin fuerza"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-031-exercise-overview.pdf",
+   "keywords_en": [],
+   "desc_en": "Loss of muscle mass and strength."
+  },
+  {
+   "id": "BONE",
+   "name": "Fractura ósea",
+   "category": "Médico",
+   "desc": "Pérdida mineral ósea de ~1-1.5% por mes (Skylab) que aumenta el riesgo de fractura.",
+   "watch_signals": [
+    "activity"
+   ],
+   "countermeasures": [
+    "Ejercicio de impacto/resistencia",
+    "Nutrición con calcio y vitamina D"
+   ],
+   "keywords": [
+    "dolor de huesos"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-030-bone-loss.pdf",
+   "keywords_en": [],
+   "desc_en": "Bone mineral loss of about 1–1.5% per month (Skylab) that raises the risk of fracture."
+  },
+  {
+   "id": "NUTR",
+   "name": "Alimentación y nutrición",
+   "category": "Médico",
+   "desc": "Nutrición inadecuada que afecta salud y desempeño.",
+   "watch_signals": [
+    "activity"
+   ],
+   "countermeasures": [
+    "Registro de ingesta",
+    "Ajuste calórico según gasto"
+   ],
+   "keywords": [
+    "no tengo hambre",
+    "no he comido"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-013-food-and-nutrition.pdf",
+   "keywords_en": [],
+   "desc_en": "Inadequate nutrition that affects health and performance."
+  },
+  {
+   "id": "MEDS",
+   "name": "Medicamentos",
+   "category": "Médico",
+   "desc": "Medicamentos ineficaces o tóxicos en misiones largas.",
+   "watch_signals": [],
+   "countermeasures": [
+    "Revisar caducidad y almacenamiento del kit"
+   ],
+   "keywords": [
+    "medicina",
+    "pastilla"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [],
+   "desc_en": "Medications that become ineffective or toxic on long missions."
+  },
+  {
+   "id": "HEAR",
+   "name": "Pérdida auditiva",
+   "category": "Ambiental",
+   "desc": "Daño auditivo por ruido a bordo.",
+   "watch_signals": [
+    "ambient_db"
+   ],
+   "countermeasures": [
+    "Protección auditiva",
+    "Dosimetría acústica"
+   ],
+   "keywords": [
+    "zumbido",
+    "no escucho"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [],
+   "desc_en": "Hearing damage from noise on board."
+  },
+  {
+   "id": "NIR",
+   "name": "Radiación no ionizante",
+   "category": "Ambiental",
+   "desc": "Efectos por emisores RF, luces y láseres.",
+   "watch_signals": [],
+   "countermeasures": [
+    "Controles operacionales de emisores"
+   ],
+   "keywords": [
+    "láser"
+   ],
+   "url": "https://www.nasa.gov/wp-content/uploads/2024/02/ochmo-tb-045-non-ionizing-radiation.pdf",
+   "keywords_en": [],
+   "desc_en": "Effects of radio-frequency emitters, lights and lasers."
+  },
+  {
+   "id": "TOX",
+   "name": "Sustancias tóxicas",
+   "category": "Ambiental",
+   "desc": "Exposición a sustancias tóxicas en la atmósfera de cabina.",
+   "watch_signals": [
+    "resp_rate"
+   ],
+   "countermeasures": [
+    "Máscara y evacuación del módulo",
+    "Análisis de calidad de aire"
+   ],
+   "keywords": [
+    "olor",
+    "humo",
+    "me arden los ojos"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [
+    "smell",
+    "smoke",
+    "eyes burn"
+   ],
+   "desc_en": "Exposure to toxic substances in the cabin air."
+  },
+  {
+   "id": "DUST",
+   "name": "Polvo",
+   "category": "Ambiental",
+   "desc": "Exposición a polvo celeste (lunar/marciano).",
+   "watch_signals": [],
+   "countermeasures": [
+    "Control de polvo en esclusa"
+   ],
+   "keywords": [
+    "polvo"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [],
+   "desc_en": "Exposure to lunar or Martian dust."
+  },
+  {
+   "id": "DYN",
+   "name": "Cargas dinámicas",
+   "category": "Operacional",
+   "desc": "Lesión por cargas dinámicas (lanzamiento, aterrizaje).",
+   "watch_signals": [
+    "accel"
+   ],
+   "countermeasures": [
+    "Asientos y restricciones adecuadas"
+   ],
+   "keywords": [
+    "golpe",
+    "impacto"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [],
+   "desc_en": "Injury from dynamic loads during launch and landing."
+  },
+  {
+   "id": "SHOCK",
+   "name": "Choque eléctrico",
+   "category": "Operacional",
+   "desc": "Riesgo de choque eléctrico para la tripulación.",
+   "watch_signals": [
+    "hr"
+   ],
+   "countermeasures": [
+    "Desenergizar y evaluar ECG"
+   ],
+   "keywords": [
+    "descarga",
+    "corriente"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [],
+   "desc_en": "Risk of electric shock to the crew."
+  },
+  {
+   "id": "EGRESS",
+   "name": "Salida de la tripulación",
+   "category": "Operacional",
+   "desc": "Capacidad de salir del vehículo y operar tras aterrizar.",
+   "watch_signals": [
+    "sbp",
+    "hr"
+   ],
+   "countermeasures": [
+    "Evaluación ortostática pre-reingreso"
+   ],
+   "keywords": [
+    "aterrizaje"
+   ],
+   "url": "https://www.nasa.gov/hhp/human-system-risks/",
+   "keywords_en": [],
+   "desc_en": "Ability to leave the vehicle and operate after landing."
+  }
+ ]
+}

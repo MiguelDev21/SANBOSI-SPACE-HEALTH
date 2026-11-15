@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SANBOSI · Panel de la estación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="/static/common.css">
+<link rel="stylesheet" href="/static/panel.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="logo" aria-hidden="true"></span><span class="brandname">SANBOSI</span></div>
+    <nav aria-label="Secciones" class="navs">
+      <a class="nav" href="#monitor" data-v="monitor"><span data-i="crew"></span><span>Monitoreo</span></a>
+      <a class="nav" href="#alertas" data-v="alertas"><span data-i="bell"></span><span>Alertas</span><span class="cnt" id="navCnt">0</span></a>
+      <a class="nav" href="#estacion" data-v="estacion"><span data-i="station"></span><span>Estación y datos</span></a>
+      <div class="sep"></div>
+      <a class="nav" href="/watch" target="_blank"><span data-i="watch"></span><span>Reloj</span></a>
+    </nav>
+    <div class="langbox" role="group" aria-label="Idioma"><button class="lg" data-lang="es">Español</button><button class="lg" data-lang="en">English</button></div>
+    <div class="who"><span style="font-size:14px;font-weight:500" id="surgeon">Dra. Paula Vega</span><span class="lbl">Médico de vuelo · a bordo</span></div>
+  </aside>
+
+  <main>
+    <div class="head">
+      <div><h1 id="title">Monitoreo</h1><span class="muted" id="sub">Día 42 de misión</span></div>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <!-- ===================== MONITOREO (tripulación · astronautas · tierra en una sola vista) ===================== -->
+    <section class="view" id="v-monitor">
+      <div class="picker" id="picker" role="tablist" aria-label="Seleccionar vista"></div>
+
+      <!-- Tripulación -->
+      <div class="pane" id="p-crew">
+        <div class="row3">
+          <div class="card" style="display:flex;gap:20px;align-items:center">
+            <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+              <span class="lbl">Radiación en la estación</span>
+              <span style="display:flex;align-items:baseline;gap:6px"><span class="big num" id="radNow">—</span><span class="muted">µGy/h</span></span>
+              <span id="radState" class="c-ok" style="font-size:13px;font-weight:400">—</span>
+            </div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px"><canvas id="radSpark"></canvas><span class="lbl" id="radNote"></span></div>
+          </div>
+          <a class="card" href="#alertas" style="color:var(--text);display:flex;flex-direction:column;gap:4px">
+            <span class="lbl">Alertas abiertas</span><span class="big num" id="openAl">0</span><span class="soft" style="font-size:13px" id="openAlSub"></span>
+            <span style="margin-top:auto;font-size:13px;color:var(--link)">Ver alertas ›</span></a>
+          <button class="card linkcard" data-pick="earth" style="display:flex;flex-direction:column;gap:4px">
+            <span class="lbl">Enlace con la Tierra</span><span class="big" id="linkBig" style="font-size:26px">—</span><span class="soft" style="font-size:13px" id="linkSub"></span>
+            <span style="margin-top:auto;font-size:13px;color:var(--link)">Ver Tierra ›</span></button>
+          <div class="card" style="display:flex;flex-direction:column;gap:4px">
+            <span class="lbl">Charla con el reloj hoy</span><span class="big num" id="talks">0 de 4</span><span class="soft" style="font-size:13px" id="talksSub"></span></div>
+        </div>
+        <div class="crew" id="crew"></div>
+      </div>
+
+      <!-- Astronauta -->
+      <div class="pane" id="p-astro">
+        <div class="astro3d">
+          <section class="card stage" id="stage" aria-label="Modelo 3D del astronauta; arrástralo para girarlo">
+            <canvas id="body3d"></canvas>
+            <div id="hotspots"></div>
+            <span class="s-title"><b id="sName">—</b><span class="lbl" id="sRole">—</span></span>
+            <span class="s-badge" id="sBadge">Datos en vivo</span>
+            <span class="s-msg" id="sMsg">Cargando modelo 3D…</span>
+            <div class="layers" role="group" aria-label="Capa del cuerpo" id="layers"></div>
+            <span class="s-help"><span class="lbl">Arrastra para girar</span><span class="lbl">Rueda para acercar</span><span class="lbl">Toca un punto</span></span>
+          </section>
+          <div class="sidecol">
+            <div class="card infocard" id="infoCard"></div>
+            <div class="card" style="padding:10px"><div class="ptlist" id="ptList"></div></div>
+          </div>
+        </div>
+        <div class="card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap"><span id="aHead" style="display:flex;align-items:center;gap:12px;flex:1"></span><a class="btn small" id="csv" href="#">Exportar CSV</a></div>
+          <div class="tiles" id="tiles"></div></div>
+        <div class="two">
+          <div class="card"><h3>Tendencias en vivo <span class="r">banda = su rango habitual</span></h3>
+            <div class="charts"><canvas id="cHr"></canvas><canvas id="cSpo2"></canvas><canvas id="cTemp"></canvas><canvas id="cBp"></canvas></div></div>
+          <div class="card"><h3>Cambios detectados <span class="r" id="nf"></span></h3><div class="list" id="findings"></div>
+            <p class="lbl" style="margin:10px 0 0">El sistema detecta variaciones frente a la línea base de cada astronauta y apoya decisiones; no diagnostica.</p></div>
+        </div>
+        <div class="two">
+          <div class="card">
+            <h3>Mente y voz <span class="r" id="vWhen">Sin charlas todavía</span></h3>
+            <div class="vs" id="vs"></div>
+            <div style="height:1px;background:var(--line);margin:14px 0"></div>
+            <div class="gauges" id="gauges"></div>
+            <p class="soft" id="vexpl" style="font-size:13px;margin:12px 0 0"></p>
+            <div class="rec" style="margin-top:12px"><button class="btn primary" id="recBtn"><span data-i="mic"></span><span id="recTxt">Mantener para hablar</span></button><span class="num" id="db">— dBFS</span>
+              <label class="lbl" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="cal"><span>Calibrar su voz habitual</span></label></div>
+            <div class="meter" style="margin-top:10px"><i id="meter"></i></div>
+            <div class="item" style="margin-top:10px"><div class="e" id="vtext" data-notr>Aún no hay grabaciones.</div></div>
+          </div>
+          <div class="card"><h3>Diario y autorreporte</h3>
+            <form id="repForm" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <label class="lbl">Sueño<select id="rSleep" style="width:100%;margin-top:4px"><option value="Bien">Bien</option><option value="Regular">Regular</option><option value="Mal">Mal</option></select></label>
+              <label class="lbl">Ánimo<select id="rMood" style="width:100%;margin-top:4px"><option value="Tranquila/o">Tranquila/o</option><option value="Cansada/o">Cansada/o</option><option value="Estresada/o">Estresada/o</option><option value="Triste">Triste</option></select></label>
+              <label class="lbl" style="grid-column:1/-1">Síntomas o nota<input id="rNote" style="width:100%;margin-top:4px" placeholder="Ej.: dolor de cabeza desde la mañana"></label>
+              <button class="btn small" style="grid-column:1/-1">Registrar autorreporte</button></form>
+            <div class="list" id="diary" style="margin-top:12px;max-height:240px"></div></div>
+        </div>
+        <div class="card"><h3>Asistente de a bordo <span class="r"><span id="aiEng"></span></span></h3>
+          <div class="chat" id="chat"></div>
+          <form id="chatForm" style="display:flex;gap:8px;flex-wrap:wrap"><label for="chatIn" class="lbl" style="width:100%">Escribe como si fueras el astronauta</label>
+            <input id="chatIn" style="flex:1;min-width:200px" placeholder="¿Cómo estoy? · me duele la cabeza · ¿cómo está la radiación?"><button class="btn primary">Enviar</button>
+            <label class="lbl" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="tts" checked><span>Leer en voz alta</span></label></form></div>
+      </div>
+
+      <!-- Tierra -->
+      <div class="pane" id="p-earth">
+        <div class="card banner" id="eBanner"></div>
+        <div class="two">
+          <div class="card"><h3>Último resumen recibido por DTN <span class="r" id="eSumAge"></span></h3><div class="ecrew" id="eCrew"><span class="muted">Esperando el primer paquete de la estación…</span></div></div>
+          <div class="card"><h3>Mensaje a la tripulación</h3>
+            <label class="lbl" for="eTo">Para</label><select id="eTo" style="width:100%;margin:4px 0 10px"><option value="">Toda la tripulación</option></select>
+            <label class="lbl" for="eTxt">Mensaje</label><textarea id="eTxt" rows="3" style="width:100%;margin-top:4px" placeholder="Ej.: Ana, por favor ajusta tu horario de descanso esta noche."></textarea>
+            <button class="btn primary" id="eSend" style="margin-top:10px;width:100%">Enviar por DTN · prioridad alta</button>
+            <p class="lbl" id="eRes" style="margin:8px 0 0"></p></div>
+        </div>
+        <div class="half">
+          <div class="card"><h3>Alertas recibidas en Tierra</h3><div class="list" id="eAlerts"></div></div>
+          <div class="card"><h3>Reportes de voz recibidos</h3><div class="list" id="eVoice"></div></div>
+        </div>
+        <div class="card"><h3>Paquetes recibidos</h3><div class="list" id="eLog" style="max-height:260px"></div></div>
+      </div>
+    </section>
+
+    <!-- ===================== ALERTAS ===================== -->
+    <section class="view" id="v-alertas">
+      <div class="alerts">
+        <div class="card"><h3>Alertas <span class="r" id="alSub"></span></h3><div class="list" id="alist" style="max-height:620px"></div></div>
+        <div class="card" id="adet"></div>
+      </div>
+    </section>
+
+    <!-- ===================== ESTACIÓN Y DATOS ===================== -->
+    <section class="view" id="v-estacion">
+      <div class="half">
+        <div class="card"><h3>Escenarios de prueba <span class="r">inyecta un caso en el reloj simulado</span></h3>
+          <div style="display:flex;gap:8px;margin-bottom:10px"><select id="scTarget" style="flex:1" aria-label="Destino"></select><button class="btn small" id="scReset">Todo normal</button></div>
+          <div class="scen" id="scen"></div></div>
+        <div class="card"><h3>Enlace a Tierra · DTN <span class="r" id="dtnMode"></span></h3><div id="dtn"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+            <button class="btn small" id="los">Forzar pérdida de señal</button><button class="btn small" id="wlink">Cortar enlace del reloj</button>
+            <select id="dest" aria-label="Perfil"><option value="ISS">Órbita baja (ISS)</option><option value="LUNA">Luna · 1,3 s</option><option value="MARTE">Marte · 10 min</option></select></div></div>
+      </div>
+      <div class="half">
+        <div class="card"><h3>Ambiente de la ISS <span class="r" id="envSrc"></span></h3><dl class="kv" id="env"></dl><p class="lbl" id="envErr" style="margin:10px 0 0"></p></div>
+        <div class="card"><h3>Radiación <span class="r" id="radSrc"></span></h3><div id="rad"></div></div>
+      </div>
+      <div class="half">
+        <div class="card"><h3>Fuentes de datos</h3><table class="src" id="sources"></table></div>
+        <div class="card"><h3>Bitácora</h3><div class="list" id="events"></div></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="/static/lib.js"></script>
+<script src="/static/i18n.js"></script>
+<script src="/static/vendor/three-sambosi.min.js"></script>
+<script src="/static/vendor/sambosi-cuerpo.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
