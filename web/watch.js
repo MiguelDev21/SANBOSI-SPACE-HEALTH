@@ -741,8 +741,16 @@ function findWake(text) {
 const WAKE = {rec: null, on: false, want: false, busy: false, busyAt: 0, lastEvt: 0, fails: 0};
 function wakeSupported() { return !!(window.SpeechRecognition || window.webkitSpeechRecognition); }
 function setBusy(v) { WAKE.busy = v; WAKE.busyAt = v ? Date.now() : 0; }
+// Solo UNA pestaña del reloj puede escuchar: Chrome tiene un solo reconocedor de voz y, si hay varias pestañas
+// abiertas (cada arranque abre una nueva), se lo quitan entre ellas y ninguna recibe tus palabras.
+// Escucha la pestaña visible que se usó por última vez; las demás ceden.
+const TAB = Math.random().toString(36).slice(2);
+const BC = window.BroadcastChannel ? new BroadcastChannel("sanbosi-wake") : null;
+WAKE.yielded = false;
+function claimMic() { WAKE.yielded = false; if (BC) BC.postMessage({claim: TAB}); }
+if (BC) BC.onmessage = e => { if (e.data && e.data.claim && e.data.claim !== TAB) { WAKE.yielded = true; wakeStop(); wakeUI(); } };
 function wakeStart() {
-  if (!WAKE.want || !W.mic || W.rec || W.speaking || WAKE.on || WAKE.busy || !wakeSupported()) { wakeUI(); return; }
+  if (!WAKE.want || !W.mic || W.rec || W.speaking || WAKE.on || WAKE.busy || !wakeSupported() || document.hidden || WAKE.yielded) { wakeUI(); return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition, r = new SR();
   r.lang = AV.speechLang(); r.continuous = true; r.interimResults = true; r.maxAlternatives = 5;
   r.onstart = r.onaudiostart = r.onsoundstart = () => { WAKE.lastEvt = Date.now(); WAKE.fails = 0; };
@@ -777,9 +785,11 @@ setInterval(() => {
   if (W.speaking && window.speechSynthesis && !speechSynthesis.speaking && !speechSynthesis.pending && now - (W.speakAt || now) > 3000) W.speaking = false;
   if (!WAKE.on && !W.rec && !W.speaking && !WAKE.busy) wakeStart();
 }, 1500);
-document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(wakeStart, 300); });
+document.addEventListener("visibilitychange", () => { if (document.hidden) wakeStop(); else { claimMic(); setTimeout(wakeStart, 300); } });
+window.addEventListener("focus", () => { claimMic(); setTimeout(wakeStart, 300); });
+document.addEventListener("pointerdown", () => { if (WAKE.yielded) { claimMic(); setTimeout(wakeStart, 200); } });
 function wakeUI() { const el = $("#wakeState"); if (!el) return;
-  el.innerHTML = !wakeSupported() ? `<span class="c-warn">${L2("La activación por voz necesita Chrome o Edge.", "Voice wake-up needs Chrome or Edge.")}</span>` : WAKE.want ? (WAKE.on ? `<span class="c-ok">● ${L2("Escuchando “Hola Sanbosi”", "Listening for “Hey Sanbosi”")}</span>` : `<span class="muted">● ${L2("En espera…", "Standing by…")}</span>`) : `<span class="muted">${L2("Desactivada", "Off")}</span>`;
+  el.innerHTML = !wakeSupported() ? `<span class="c-warn">${L2("La activación por voz necesita Chrome o Edge.", "Voice wake-up needs Chrome or Edge.")}</span>` : WAKE.want ? (WAKE.on ? `<span class="c-ok">● ${L2("Escuchando “Hola Sanbosi”", "Listening for “Hey Sanbosi”")}</span>` : WAKE.yielded ? `<span class="c-warn">● ${L2("Otra pestaña del reloj está escuchando. Toca aquí para usar esta.", "Another watch tab is listening. Tap here to use this one.")}</span>` : `<span class="muted">● ${L2("En espera…", "Standing by…")}</span>`) : `<span class="muted">${L2("Desactivada", "Off")}</span>`;
   $("#wakeToggle").checked = WAKE.want; }
 function onWake(rest) {
   const n = first();
@@ -891,6 +901,6 @@ window.addEventListener("resize", fit); fit();
   $("#cmdHelp").setAttribute("data-notr", "");
   WAKE.want = wakeSupported(); wakeUI(); AV.tr(document.body);
   document.addEventListener("pointerdown", function once() { document.removeEventListener("pointerdown", once); if (WAKE.want) wakeStart(); });
-  applyLayers(); paint(); await poll(); setInterval(poll, 1000); wakeStart(); setInterval(() => { $("#clock").textContent = nowHM(); live(); }, 1000);
+  applyLayers(); paint(); await poll(); setInterval(poll, 1000); claimMic(); wakeStart(); setInterval(() => { $("#clock").textContent = nowHM(); live(); }, 1000);
 })();
 })();
