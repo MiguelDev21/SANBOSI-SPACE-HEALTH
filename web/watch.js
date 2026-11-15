@@ -811,6 +811,21 @@ function onWake(rest) {
 window.__sambosi = {onWake: x => onWake(x), matchCommand, findWake, state: W, go, home};   // ganchos para pruebas automáticas
 $("#wakeToggle").addEventListener("change", e => { WAKE.want = e.target.checked; if (WAKE.want) wakeStart(); else { wakeStop(); RING.stop(); } });
 document.addEventListener("pointerdown", () => RING.resume());
+// selector de micrófono: el iPhone (Continuidad), audífonos o el de la Mac
+async function fillMics() {
+  const sel = $("#micSel"); if (!sel) return;
+  const mics = await AV.listMics(), cur = AV.micId();
+  const opts = [`<option value="">${L2("Predeterminado del sistema", "System default")}</option>`]
+    .concat(mics.filter(m => m.deviceId && m.deviceId !== "default" && m.deviceId !== "communications").map((m, i) => `<option value="${m.deviceId}">${esc(m.label || L2("Micrófono ", "Microphone ") + (i + 1))}</option>`));
+  sel.innerHTML = opts.join(""); sel.value = mics.some(m => m.deviceId === cur) ? cur : "";
+}
+$("#micSel").addEventListener("change", e => {
+  AV.setMic(e.target.value);
+  RING.stop(); if (WAKE.want) RING.start();
+  banner(L2("Micrófono", "Microphone"), e.target.selectedOptions[0].textContent);
+});
+if (navigator.mediaDevices) navigator.mediaDevices.addEventListener("devicechange", () => { fillMics(); if (AV.micId() && WAKE.want) { RING.stop(); RING.start(); } });
+setTimeout(fillMics, 1500); setTimeout(fillMics, 6000);   // los nombres aparecen cuando el navegador ya dio permiso al micrófono
 
 const ptt = $("#ptt");
 ptt.addEventListener("mousedown", e => { e.preventDefault(); W.pttHold = true; if (!W.mic) { W.mic = true; W.micUntil = 0; } startListen(false); });

@@ -66,7 +66,7 @@ AV.gauge = (v, label, color) => {
 AV.Recorder = class {
   constructor(onLevel) { this.onLevel = onLevel; this.chunks = []; this.rec = null; this.transcript = ""; this.peakDb = -100; this.alts = []; this.finals = ""; this.active = false; this.lastTextAt = 0; this.lastFinal = false; }
   async start() {
-    this.stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: false, autoGainControl: false}});
+    this.stream = await navigator.mediaDevices.getUserMedia(AV.micConstraints());
     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     this.sr = this.ctx.sampleRate; this.chunks = []; this.peakDb = -100; this.transcript = "";
     const src = this.ctx.createMediaStreamSource(this.stream);
@@ -196,6 +196,13 @@ AV.say = (text, opts = {}) => {
 };
 AV.speak = (text, on = true) => { if (on) AV.say(text); };
 
+// ---------------------------------------------------------------- micrófono elegido (Mac, iPhone, audífonos…)
+// Se guarda la elección; si ese micrófono no está conectado se usa el predeterminado del navegador.
+AV.micId = () => { try { return localStorage.getItem("sanbosi_mic") || ""; } catch (e) { return ""; } };
+AV.setMic = id => { try { localStorage.setItem("sanbosi_mic", id || ""); } catch (e) {} };
+AV.micConstraints = () => { const a = {echoCancellation: true, noiseSuppression: false, autoGainControl: false}, id = AV.micId(); if (id) a.deviceId = {ideal: id}; return {audio: a}; };
+AV.listMics = async () => { try { return (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === "audioinput"); } catch (e) { return []; } };
+
 // micrófono en segundo plano mientras se escucha "Hey Sanbosi": guarda los últimos segundos de audio para poder
 // analizar la voz también cuando el astronauta dice todo seguido ("Hey Sanbosi, ¿cómo está mi corazón?")
 AV.AudioRing = class {
@@ -204,7 +211,7 @@ AV.AudioRing = class {
     if (this.on || this.starting || !navigator.mediaDevices) return;
     this.starting = true;
     try {
-      this.stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: false, autoGainControl: false}});
+      this.stream = await navigator.mediaDevices.getUserMedia(AV.micConstraints());
       this.ctx = new (window.AudioContext || window.webkitAudioContext)(); this.sr = this.ctx.sampleRate;
       const src = this.ctx.createMediaStreamSource(this.stream), max = Math.ceil(this.sec * this.sr / 4096);
       this.proc = this.ctx.createScriptProcessor(4096, 1, 1);
