@@ -7,12 +7,15 @@ SANBOSI is a health monitoring system for space crews. A **smartwatch** on each 
 
 > **Design principle:** SANBOSI **detects variations, it does not diagnose.** It compares each astronaut with themselves, explains what changed and which NASA risk it relates to, and suggests a next step. Medical decisions always belong to the flight surgeon and the mission's validated protocols.
 
+📄 **Project document:** [English (PDF)](SANBOSI-SPACE-HEALTH-English.pdf) · [Español (PDF)](SANBOSI-SPACE-HEALTH-Espanol.pdf)
+
 ![Station panel · 3D astronaut](docs/panel-astronauta-3d.png)
 
 ---
 
 ## Contents
 
+1. [Project document](#project-document)
 1. [What it does](#what-it-does)
 2. [Quick start](#quick-start)
 3. [How it works](#how-it-works)
@@ -28,6 +31,26 @@ SANBOSI is a health monitoring system for space crews. A **smartwatch** on each 
 13. [Proposed hardware](#proposed-hardware)
 14. [Limitations](#limitations)
 15. [Credits](#credits)
+
+---
+
+## Project document
+
+The full project write-up is in the repository root, in English and Spanish:
+
+| Document | Pages | Contents |
+|---|---|---|
+| [**SANBOSI-SPACE-HEALTH-English.pdf**](SANBOSI-SPACE-HEALTH-English.pdf) | 35 | English version |
+| [**SANBOSI-SPACE-HEALTH-Espanol.pdf**](SANBOSI-SPACE-HEALTH-Espanol.pdf) | 37 | Spanish version |
+
+It covers:
+
+1. **Project identification** – general information, team members and challenge description.
+2. **Executive summary** – the project in one minute, objectives, benefits and what makes SANBOSI different.
+3. **Health and radiation research** – what to monitor, how radiation is measured, what the detector provides, watch and health sensors, recommended nutrition.
+4. **Solution design** – what the application shows, health-area additions, mental health and AI assistant, voice analysis, smart routines and reminders, how everything connects, hackathon demo, use of real NASA data, onboard and Earth communications, change detection and alert states.
+5. **Hardware architecture and radiological health protocol for wearable dosimetry** – from prototype to space version, radiation-tolerant solid-state detectors and light shielding, hermetic sealing and passive thermal control, fault-tolerant processing (triple modular redundancy), solid-state batteries and inductive charging, and how the dosimeter works (continuous detection, clinical dose calculation and early warning).
+6. **References.**
 
 ---
 
@@ -249,6 +272,8 @@ SANBOSI-SPACE-HEALTH/
 ├── Abrir SANBOSI.command          double-click launcher (macOS)
 ├── Abrir SANBOSI (Windows).bat    double-click launcher (Windows)
 ├── start.sh                       terminal launcher (macOS/Linux)
+├── SANBOSI-SPACE-HEALTH-English.pdf   project document (English)
+├── SANBOSI-SPACE-HEALTH-Espanol.pdf   project document (Spanish)
 ├── requirements.txt
 ├── PLAN.md                        plan, architecture and demo script (Spanish)
 ├── LEEME-PRIMERO.txt              short instructions for whoever receives the project (Spanish)
@@ -306,7 +331,7 @@ The prototype simulates the watch, but it is designed for a **commercial smartwa
 
 ## Credits
 
-- **Team Sanbosi-FET** (Neiva, Huila, Colombia): idea, watch design, 3D body model and software.
+- **Team Sanbosi-FET** (Neiva, Huila, Colombia): Victor Andres Castro Ospina, Miguel Antonio Urbano Silva, Santiago González Becerra, Nicolas Guillermo Peña, Duván Daniel Lozano Ramírez and Miguel Ángel Bahamón — idea, research, watch design, 3D body model, hardware proposal and software.
 - **DTN framework:** K. Grover and M. Ponce, *An Open-Source Framework to Emulate Delay and Disruption Tolerant Networks for International Space Station Communication*, ISORC 2026, [arXiv:2605.21624](https://arxiv.org/abs/2605.21624) (`kritgrover/iss-simulator`).
 - **Data:** NASA ISS Live!, NASA OSDR (RadLab, Inspiration4 OSD-569/575), NOAA SWPC GOES, NASA Human System Risk Board.
 - **Libraries:** Starlette, Uvicorn, NumPy, SciPy, cryptography, Three.js.
