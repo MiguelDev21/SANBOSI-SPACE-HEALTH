@@ -1,310 +1,312 @@
-# SANBOSI · Monitoreo de salud para astronautas
+# SANBOSI · Health Monitoring for Astronauts
 
-**NASA Space Apps Challenge 2026** · Reto *Create Health Monitoring Software for Astronauts on Space Missions*
-Equipo **Sanbosi-FET** · Neiva, Huila, Colombia
+**NASA Space Apps Challenge 2026** · Challenge *Create Health Monitoring Software for Astronauts on Space Missions*
+Team **Sanbosi-FET** · Neiva, Huila, Colombia
 
-SANBOSI es un sistema de monitoreo de salud para tripulaciones espaciales. Un **reloj inteligente** en la muñeca de cada astronauta mide signos vitales y escucha su voz. Una **estación a bordo** compara esos datos con la línea base personal de cada tripulante, los relaciona con los riesgos de salud catalogados por la NASA y responde por voz. La **Tierra** recibe resúmenes y alertas mediante una red tolerante a retrasos (**DTN**), aunque se pierda la señal.
+SANBOSI is a health monitoring system for space crews. A **smartwatch** on each astronaut's wrist measures vital signs and listens to their voice. An **onboard station** compares that data with each crew member's personal baseline, links it to the health risks catalogued by NASA and answers by voice. **Earth** receives summaries and alerts over a **Delay/Disruption Tolerant Network (DTN)**, even when the signal is lost.
 
-> **Principio de diseño:** SANBOSI **detecta variaciones, no diagnostica.** Compara a cada astronauta consigo mismo, explica qué cambió y con qué riesgo NASA se relaciona, y sugiere un siguiente paso. La decisión médica es siempre del médico de vuelo y de los protocolos validados de la misión.
+> **Design principle:** SANBOSI **detects variations, it does not diagnose.** It compares each astronaut with themselves, explains what changed and which NASA risk it relates to, and suggests a next step. Medical decisions always belong to the flight surgeon and the mission's validated protocols.
 
-![Panel de la estación · astronauta en 3D](docs/panel-astronauta-3d.png)
+![Station panel · 3D astronaut](docs/panel-astronauta-3d.png)
 
 ---
 
-## Contenido
+## Contents
 
-1. [Qué hace](#qué-hace)
-2. [Arranque rápido](#arranque-rápido)
-3. [Cómo funciona](#cómo-funciona)
-4. [Componentes](#componentes)
-5. [Fuentes de datos](#fuentes-de-datos)
-6. [Asistente por voz](#asistente-por-voz)
-7. [Riesgos NASA y reglas](#riesgos-nasa-y-reglas)
-8. [Tripulación de la demo](#tripulación-de-la-demo)
+1. [What it does](#what-it-does)
+2. [Quick start](#quick-start)
+3. [How it works](#how-it-works)
+4. [Components](#components)
+5. [Data sources](#data-sources)
+6. [Voice assistant](#voice-assistant)
+7. [NASA risks and rules](#nasa-risks-and-rules)
+8. [Demo crew](#demo-crew)
 9. [API](#api)
-10. [Estructura del repositorio](#estructura-del-repositorio)
-11. [Pruebas](#pruebas)
-12. [Configuración](#configuración)
-13. [Hardware propuesto](#hardware-propuesto)
-14. [Limitaciones](#limitaciones)
-15. [Créditos](#créditos)
+10. [Repository structure](#repository-structure)
+11. [Tests](#tests)
+12. [Configuration](#configuration)
+13. [Proposed hardware](#proposed-hardware)
+14. [Limitations](#limitations)
+15. [Credits](#credits)
 
 ---
 
-## Qué hace
+## What it does
 
-| Parte | Qué hace |
+| Part | What it does |
 |---|---|
-| **Reloj del astronauta** | Mide pulso, oxígeno en sangre (SpO₂), temperatura de piel, respiración, presión estimada, variabilidad cardíaca (VFC/HRV), ritmo irregular, sueño, hidratación y actividad. Conversa por voz (“Hola/Hey Sanbosi”), registra agua y comidas, guía respiraciones, avisa tormentas solares y llama al médico. |
-| **Estación a bordo** | Recibe los datos cada segundo, calcula la línea base de cada tripulante, detecta cambios, los relaciona con los riesgos del **Human System Risk Board (HSRB)** de la NASA, analiza la voz (energía, tensión, fatiga, ánimo) y responde preguntas con datos reales. |
-| **Panel del médico de vuelo** | Una sola vista: tripulación, cada astronauta con su **cuerpo 3D interactivo** (músculos, esqueleto, órganos y 8 puntos con su función y estado), gráficas, alertas, voz, diario y chat. Selector **Español / English**. |
-| **Tierra (DTN)** | Recibe resúmenes y alertas cifrados y firmados (BPSec) por DTN. Si no hay contacto, los datos quedan en custodia a bordo y llegan al recuperar la señal. Desde la Tierra se envían mensajes que llegan al reloj. |
+| **Astronaut watch** | Measures pulse, blood oxygen (SpO₂), skin temperature, breathing rate, estimated blood pressure, heart rate variability (HRV), irregular rhythm, sleep, hydration and activity. Talks by voice (“Hey/Hi Sanbosi”), logs water and meals, guides breathing, warns about solar storms and calls the doctor. |
+| **Onboard station** | Receives data every second, builds each crew member's baseline, detects changes, links them to NASA's **Human System Risk Board (HSRB)** risks, analyzes the voice (energy, tension, fatigue, mood) and answers questions with real data. |
+| **Flight surgeon panel** | One single view: crew overview, each astronaut with an **interactive 3D body** (muscles, skeleton, organs and 8 points showing their function and status), charts, alerts, voice, diary and chat. **Spanish / English** switch. |
+| **Earth (DTN)** | Receives encrypted and signed (BPSec) summaries and alerts over DTN. Without contact, data stays in custody on board and is delivered when the signal returns. Earth can send messages that reach the watch. |
 
 | | |
 |---|---|
-| ![Tripulación](docs/panel-tripulacion.png) | ![Reloj](docs/reloj.png) |
-| Tripulación: radiación, alertas, enlace a Tierra y estado de cada astronauta | Reloj interactivo con asistente por voz |
-| ![Sangre Inspiration4](docs/panel-sangre-inspiration4.png) | ![Tierra](docs/consola-tierra.png) |
-| Punto **Sangre** con exámenes reales de Inspiration4 (NASA OSDR) | Vista Tierra: lo que llega por DTN |
+| ![Crew](docs/panel-tripulacion.png) | ![Watch](docs/reloj.png) |
+| Crew: radiation, alerts, Earth link and status of each astronaut | Interactive watch with voice assistant |
+| ![Inspiration4 blood](docs/panel-sangre-inspiration4.png) | ![Earth](docs/consola-tierra.png) |
+| **Blood** point with real Inspiration4 lab tests (NASA OSDR) | Earth view: what arrives over DTN |
+
+> Screenshots show the interface in Spanish; switch to English with the language selector (bottom left of the panel, top right of the watch).
 
 ---
 
-## Arranque rápido
+## Quick start
 
-**Requisitos:** Python 3.10–3.13 e internet la primera vez (dependencias y datos NASA en vivo). Para la voz, **Chrome o Edge**.
+**Requirements:** Python 3.10–3.13 and internet the first time (dependencies and live NASA data). For voice, **Chrome or Edge**.
 
-| Sistema | Cómo abrirlo |
+| System | How to open it |
 |---|---|
-| **macOS** | Doble clic en `Abrir SANBOSI.command` (si macOS lo bloquea: clic derecho → Abrir) |
-| **Windows** | Doble clic en `Abrir SANBOSI (Windows).bat` (al instalar Python marca *Add python.exe to PATH*) |
+| **macOS** | Double-click `Abrir SANBOSI.command` (if macOS blocks it: right-click → Open) |
+| **Windows** | Double-click `Abrir SANBOSI (Windows).bat` (when installing Python, check *Add python.exe to PATH*) |
 | **Linux / terminal** | `./start.sh` |
 
 ```bash
 git clone https://github.com/MiguelDev21/SANBOSI-SPACE-HEALTH.git
 cd SANBOSI-SPACE-HEALTH
-./start.sh              # crea .venv, instala dependencias, levanta la estación y 4 relojes simulados
+./start.sh              # creates .venv, installs dependencies, starts the station and 4 simulated watches
 ```
 
-Se abre en el navegador:
+It opens in the browser:
 
-| URL | Qué es |
+| URL | What it is |
 |---|---|
-| http://localhost:8700 | Panel de la estación (médico de vuelo) |
-| http://localhost:8700/watch | Reloj del astronauta |
-| http://localhost:8700/?ver=earth | Vista Tierra |
+| http://localhost:8700 | Station panel (flight surgeon) |
+| http://localhost:8700/watch | Astronaut watch |
+| http://localhost:8700/?ver=earth | Earth view |
 
-Opciones: `./start.sh --offline` (sin internet, datos simulados) · `./start.sh --full` (levanta además el framework DTN completo con órbita SGP4 real en :8000 y su globo 3D en :8080; requiere Node/npm).
+Options: `./start.sh --offline` (no internet, simulated data) · `./start.sh --full` (also starts the full DTN framework with real SGP4 orbit on :8000 and its 3D globe on :8080; requires Node/npm).
 
-**IA generativa local (opcional):** sin internet ni nube, con [Ollama](https://ollama.com):
+**Local generative AI (optional):** no internet or cloud needed, with [Ollama](https://ollama.com):
 ```bash
-ollama pull llama3.2:3b     # o qwen2.5:7b con 16 GB de RAM
+ollama pull llama3.2:3b     # or qwen2.5:7b with 16 GB of RAM
 ```
-Sin Ollama el asistente responde con su motor de reglas + base de conocimiento NASA, que funciona igual para la demo.
+Without Ollama the assistant answers with its rules engine + NASA knowledge base, which works the same for the demo.
 
 ---
 
-## Cómo funciona
+## How it works
 
 ```
- RELOJ (muñeca)                  ESTACIÓN (a bordo)                                TIERRA
- ─────────────                   ──────────────────                                ──────
- signos cada 1 s ──► /api/ingest ─► línea base personal ─► motor de riesgos HSRB ─┐
- voz (WAV 16 kHz) ─► /api/voice  ─► biomarcadores de voz ─► índices de ánimo      ├─► alertas ──► panel (SSE)
- dictado/pregunta ─► /api/chat   ─► asistente (reglas+RAG / Ollama)                │
- acciones (agua,                  ambiente ISS (CO₂, O₂, presión)                  └─► bundles DTN ──► Houston
- comida, refugio) ─► /api/watch   radiación (RadLab + GOES)                             (BPSec, custodia,
-                                                                                        ventanas de contacto)
- ◄──────────── respuesta por voz, avisos, mensajes de Houston ◄───────────────────────────────────────────
+ WATCH (wrist)                   STATION (on board)                                EARTH
+ ─────────────                   ──────────────────                                ─────
+ vitals every 1 s ─► /api/ingest ─► personal baseline ─► HSRB risk engine ────────┐
+ voice (WAV 16 kHz) ► /api/voice ─► voice biomarkers ─► mood indices              ├─► alerts ──► panel (SSE)
+ dictation/question ► /api/chat  ─► assistant (rules+RAG / Ollama)                 │
+ actions (water,                  ISS environment (CO₂, O₂, pressure)              └─► DTN bundles ──► Houston
+ meals, shelter) ──► /api/watch   radiation (RadLab + GOES)                             (BPSec, custody,
+                                                                                        contact windows)
+ ◄──────────── spoken answer, alerts, messages from Houston ◄─────────────────────────────────────────────
 ```
 
-1. **Captura.** El reloj envía lotes con pulso, intervalos entre latidos (RR), SpO₂, temperatura de piel, respiración, presión estimada, acelerómetro, batería, hidratación y sueño. Guarda los datos si pierde el enlace (*store-and-forward*).
-2. **Línea base personal.** Cada tripulante tiene su rango habitual; se actualiza solo cuando no hay alertas activas, para no “aprender” lo anormal.
-3. **Voz.** Se miden tono (F0), intensidad, pausas, velocidad del habla, jitter y HNR, y se comparan con la voz habitual de la persona para calcular **energía, tensión, fatiga y ánimo**.
-4. **Motor de riesgos.** Reglas explicables (con evidencia numérica) cruzan signos, voz, síntomas referidos (“me duele la cabeza”), ambiente y radiación con **31 riesgos HSRB**.
-5. **Estados:** *Normal · Observación · Atención · Crítica · Revisar sensor* (cuando el dato parece un fallo del sensor y no del cuerpo).
-6. **Respuesta.** El reloj habla y propone pasos concretos; el panel se actualiza en vivo (Server-Sent Events).
-7. **DTN a Tierra.** Resúmenes y alertas viajan como *bundles* con prioridad (alertas = EXPEDITED), custodia a bordo y latencia según el destino (ISS, Luna 1,3 s, Marte 10 min).
+1. **Capture.** The watch sends batches with pulse, beat-to-beat intervals (RR), SpO₂, skin temperature, breathing rate, estimated blood pressure, accelerometer, battery, hydration and sleep. It stores data if the link drops (*store-and-forward*).
+2. **Personal baseline.** Each crew member has their own usual range; it only updates when there are no active alerts, so it never “learns” abnormal values.
+3. **Voice.** Pitch (F0), intensity, pauses, speech rate, jitter and HNR are measured and compared with the person's usual voice to compute **energy, tension, fatigue and mood**.
+4. **Risk engine.** Explainable rules (with numeric evidence) cross vital signs, voice, reported symptoms (“I have a headache”), environment and radiation with **31 HSRB risks**.
+5. **Status levels:** *Normal · Watch · Attention · Critical · Check sensor* (when the data looks like a sensor fault rather than the body).
+6. **Response.** The watch speaks and suggests concrete steps; the panel updates live (Server-Sent Events).
+7. **DTN to Earth.** Summaries and alerts travel as prioritized *bundles* (alerts = EXPEDITED), with custody on board and latency depending on the destination (ISS, Moon 1.3 s, Mars 10 min).
 
 ---
 
-## Componentes
+## Components
 
-### Reloj (`web/watch.html`, `web/watch.js`, `watch/`)
-- Réplica funcional del diseño del equipo: 6 páginas deslizables (agenda, esfera, tu día, radiación, corazón, energía), accesos rápidos (↓), avisos (↑), corona (inicio/apps), botón lateral (hablar) y 25 vistas con datos en vivo.
-- **Palabra de activación** “Hola/Hey/Hi Sanbosi” tolerante a pronunciaciones (sambosi, zan bosi, mambosi, *somebody*, *sam bossy*…), con escucha continua que se reactiva sola.
-- Responde en cuanto dejas de hablar (sin esperar varios segundos) y la voz en inglés usa la voz más natural disponible del navegador.
-- `watch/simulator.py` simula 4 relojes (“firmware”: lotes, reintentos, comandos) y `watch/physiology.py` el cuerpo con **15 escenarios**:
+### Watch (`web/watch.html`, `web/watch.js`, `watch/`)
+- Working replica of the team's design: 6 swipeable pages (agenda, watch face, your day, radiation, heart, energy), quick settings (↓), alerts (↑), crown (home/apps), side button (talk) and 25 views with live data.
+- **Wake word** “Hey/Hi/Hola Sanbosi”, tolerant to pronunciation variants (sambosi, zan bosi, mambosi, *somebody*, *sam bossy*…), with continuous listening that restarts on its own.
+- Answers as soon as you stop talking, and the English voice uses the most natural voice available in the browser.
+- `watch/simulator.py` simulates 4 watches (“firmware”: batches, retries, commands) and `watch/physiology.py` simulates the body with **15 scenarios**:
   `nominal, eva, eva_co2, dcs, cabin_co2, hypoxia, arrhythmia, fever, fatigue, orthostatic, dehydration, solar_storm, stress, unresponsive, sensor_loose`.
 
-### Estación (`station/`)
-| Archivo | Función |
+### Station (`station/`)
+| File | Purpose |
 |---|---|
-| `app.py` | Servidor web y API (Starlette + Uvicorn), traducción ES/EN de las respuestas |
-| `core.py` | Orquesta ingesta → línea base → riesgos → alertas → IA → DTN |
-| `features.py` | VFC (RMSSD), irregularidad del ritmo, línea base personal |
-| `risk_engine.py` | Reglas clínicas mapeadas a riesgos HSRB, detección de síntomas en lo que dice el astronauta |
-| `voice.py` | Biomarcadores de voz (NumPy/SciPy) |
-| `ai.py` | Asistente: intención de la pregunta + datos medidos + base NASA (RAG); Ollama opcional |
-| `dtn_link.py` | Enlace DTN embebido o externo (framework arXiv:2605.21624) |
-| `i18n.py` | Traducción de hallazgos, riesgos y respuestas al inglés |
-| `store.py` | SQLite (series, voz, chat, alertas, eventos) |
-| `nasa/` | Conectores: `iss_live.py`, `radiation.py` (RadLab + GOES), `osdr.py` |
-| `knowledge/hsrb_risks.json` | 31 riesgos HSRB con descripción (ES/EN), palabras clave y contramedidas |
-| `knowledge/inspiration4_labs.json` | Exámenes de sangre reales de Inspiration4 (OSD-569/575) |
+| `app.py` | Web server and API (Starlette + Uvicorn), Spanish/English translation of responses |
+| `core.py` | Orchestrates ingest → baseline → risks → alerts → AI → DTN |
+| `features.py` | HRV (RMSSD), rhythm irregularity, personal baseline |
+| `risk_engine.py` | Clinical rules mapped to HSRB risks, symptom detection in what the astronaut says |
+| `voice.py` | Voice biomarkers (NumPy/SciPy) |
+| `ai.py` | Assistant: question intent + measured data + NASA knowledge base (RAG); optional Ollama |
+| `dtn_link.py` | Embedded or external DTN link (framework arXiv:2605.21624) |
+| `i18n.py` | Translation of findings, risks and answers into English |
+| `store.py` | SQLite (series, voice, chat, alerts, events) |
+| `nasa/` | Connectors: `iss_live.py`, `radiation.py` (RadLab + GOES), `osdr.py` |
+| `knowledge/hsrb_risks.json` | 31 HSRB risks with description (ES/EN), keywords and countermeasures |
+| `knowledge/inspiration4_labs.json` | Real Inspiration4 blood tests (OSD-569/575) |
 
 ### Panel (`web/index.html`, `web/app.js`)
-- **Monitoreo** con selector superior: *Tripulación*, cada astronauta (avatar y estado) y *Tierra*.
-- **Astronauta en 3D** (Three.js, modelo del equipo): gira, mitad músculos / mitad esqueleto, capas de órganos y piel, y 8 puntos: mente, voz, oxígeno, corazón, temperatura, alimentación, radiación y **sangre**. Cada punto muestra **su función en el cuerpo**, su estado y sus datos en vivo.
-- Tarjetas de signos, tendencias con el rango habitual, cambios detectados, análisis de voz, diario/autorreporte y chat con el asistente.
-- **Alertas** (revisar y marcar resueltas) y **Estación y datos** (fuentes, escenarios de prueba, pérdida de señal, perfil de misión, exportación CSV).
-- Todo en **Español / English**.
+- **Monitoring** with a top selector: *Crew*, each astronaut (avatar and status) and *Earth*.
+- **3D astronaut** (Three.js, team model): rotates, half muscles / half skeleton, organ and skin layers, and 8 points: mind, voice, oxygen, heart, temperature, nutrition, radiation and **blood**. Each point shows **its function in the body**, its status and live data.
+- Vital sign cards, trends with the usual range, detected changes, voice analysis, diary/self-report and chat with the assistant.
+- **Alerts** (review and mark as resolved) and **Station & data** (sources, test scenarios, signal loss, mission profile, CSV export).
+- Everything in **Spanish / English**.
 
 ### DTN (`dtn-framework/`)
-Framework de K. Grover y M. Ponce (*arXiv:2605.21624*, repositorio `kritgrover/iss-simulator`, commit en `dtn-framework/UPSTREAM_COMMIT.txt`): *bundles*, almacenamiento y reenvío, custodia, ventanas de contacto con estaciones terrenas y seguridad BPSec (HMAC-SHA256 + AES-256-CBC).
+Framework by K. Grover and M. Ponce (*arXiv:2605.21624*, repository `kritgrover/iss-simulator`, commit in `dtn-framework/UPSTREAM_COMMIT.txt`): bundles, store-and-forward, custody transfer, contact windows with ground stations and BPSec security (HMAC-SHA256 + AES-256-CBC).
 
 ---
 
-## Fuentes de datos
+## Data sources
 
-| Fuente | Qué aporta | Acceso |
+| Source | What it provides | Access |
 |---|---|---|
-| **ISS Live! (NASA JSC, Lightstreamer)** | Ambiente real de la ISS: ppCO₂, ppO₂, ppN₂, presión y temperatura de cabina, esclusa | `push.lightstreamer.com`, adapter `ISSLIVE` |
-| **NASA OSDR – RadLab** | Tasa de dosis de los dosímetros de la ISS (DosTel) | `visualization.osdr.nasa.gov/radlab/api` |
-| **NOAA SWPC – GOES** | Protones ≥10 MeV y escala S de tormentas solares | `services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json` |
-| **NASA OSDR – Inspiration4** | Exámenes de sangre reales (hemograma OSD-569, panel metabólico OSD-575) de los 4 tripulantes civiles | [OSD-569](https://osdr.nasa.gov/bio/repo/data/studies/OSD-569) · [OSD-575](https://osdr.nasa.gov/bio/repo/data/studies/OSD-575) |
-| **NASA HSRB / OCHMO** | Catálogo de riesgos para la salud humana y contramedidas | nasa.gov/hhp/human-system-risks |
+| **ISS Live! (NASA JSC, Lightstreamer)** | Real ISS environment: ppCO₂, ppO₂, ppN₂, cabin pressure and temperature, airlock | `push.lightstreamer.com`, adapter `ISSLIVE` |
+| **NASA OSDR – RadLab** | Dose rate from ISS dosimeters (DosTel) | `visualization.osdr.nasa.gov/radlab/api` |
+| **NOAA SWPC – GOES** | Protons ≥10 MeV and S-scale of solar radiation storms | `services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json` |
+| **NASA OSDR – Inspiration4** | Real blood tests (complete blood count OSD-569, metabolic panel OSD-575) from the 4 civilian crew members | [OSD-569](https://osdr.nasa.gov/bio/repo/data/studies/OSD-569) · [OSD-575](https://osdr.nasa.gov/bio/repo/data/studies/OSD-575) |
+| **NASA HSRB / OCHMO** | Catalog of human health risks and countermeasures | nasa.gov/hhp/human-system-risks |
 
-Cada conector intenta en vivo, guarda caché en `station/data/cache/` y, sin red, usa un modelo simulado. El panel muestra siempre el origen: **LIVE**, **CACHE**, **SIM** o **+INYECCIÓN** (escenario de prueba).
+Each connector tries live data, caches it in `station/data/cache/` and, without network, uses a simulated model. The panel always shows the origin: **LIVE**, **CACHE**, **SIM** or **+INJECTION** (test scenario).
 
-**Exámenes Inspiration4.** Los tripulantes están desidentificados (C001–C004) y se parean con la tripulación ficticia de la demo (CM-01↔C001 … CM-04↔C004). Fechas: L-92, L-44, L-3 (antes del lanzamiento) y R+1, R+45, R+82, R+194 (después del regreso). Base = promedio previo al vuelo; cambio = R+1 frente a la base. En órbita no hubo exámenes clínicos. Ejemplo: C003 (Lena) volvió con glucosa 103 mg/dL (+44 %) y potasio 3,0 mmol/L (−14 %), ambos fuera de rango → estado *Atención*.
+**Inspiration4 lab tests.** The crew members are de-identified (C001–C004) and paired with the demo's fictional crew (CM-01↔C001 … CM-04↔C004). Dates: L-92, L-44, L-3 (before launch) and R+1, R+45, R+82, R+194 (after return). Baseline = pre-flight average; change = R+1 vs. baseline. There were no clinical tests in orbit. Example: C003 (Lena) returned with glucose 103 mg/dL (+44%) and potassium 3.0 mmol/L (−14%), both out of range → *Attention* status.
 
-**Radiación.** Dosis estimada de la misión = días × 0,35 mSv/día (punto medio del rango NASA en la ISS, 0,2–0,5) + la dosis medida por el dosímetro, comparada con el límite de carrera NASA de 600 mSv.
+**Radiation.** Estimated mission dose = days × 0.35 mSv/day (midpoint of NASA's ISS range, 0.2–0.5) + the dose measured by the dosimeter, compared with NASA's 600 mSv career limit.
 
 ---
 
-## Asistente por voz
+## Voice assistant
 
-Di **“Hola Sanbosi”** o **“Hey Sanbosi”** y espera la pregunta, o dilo todo seguido. Funciona en español e inglés.
+Say **“Hey Sanbosi”** (or “Hola Sanbosi” in Spanish) and wait for the question, or say it all at once. It works in English and Spanish.
 
-| Para | Español | English |
+| Purpose | English | Spanish |
 |---|---|---|
-| Resumen | “¿Cómo estoy?” | “How am I doing?” |
-| Signos | “¿Cómo está mi corazón?”, “¿cuánto oxígeno tengo?”, “¿tengo fiebre?”, “¿cómo está mi presión?” | “What's my heart rate?”, “What's my oxygen?”, “Do I have a fever?” |
-| Sueño | “¿Cuánto dormí?” | “How did I sleep?” |
-| Agua / comida | “Tomé un vaso de agua”, “Ya almorcé” | “I drank a glass of water”, “I had lunch” |
-| Radiación | “¿Cómo está la radiación?”, “Estoy en el refugio” | “How's the radiation?”, “I'm in the shelter” |
-| Mente | “¿Cómo sueno?”, “Estoy estresado”, “Respira conmigo” | “How do I sound?”, “Breathe with me” |
-| Sangre | “¿Cómo están mis exámenes de sangre?”, “¿cómo está mi glucosa?” | “How are my blood tests?” |
-| Explicar | “¿Qué es la pérdida ósea?”, “¿por qué es peligrosa la radiación?” | “What is bone loss?”, “Why is radiation dangerous?” |
-| Síntomas | “Me duele la cabeza”, “Me siento mareado” | “I have a headache”, “I feel dizzy” |
-| Rutina / avisos | “¿Qué sigue?”, “Muéstrame mis avisos” | “What's next?”, “Show my alerts” |
-| Médico / Tierra | “Avisa al médico”, “¿Hay contacto con la Tierra?” | “Call the doctor”, “Are we in contact with Earth?” |
-| Control médico | “Mi presión es 118 sobre 76”, “Glucosa 96” | “My blood pressure is 118 over 76” |
+| Summary | “How am I doing?” | “¿Cómo estoy?” |
+| Vitals | “What's my heart rate?”, “What's my oxygen?”, “Do I have a fever?”, “What's my blood pressure?” | “¿Cómo está mi corazón?”, “¿Cuánto oxígeno tengo?” |
+| Sleep | “How did I sleep?” | “¿Cuánto dormí?” |
+| Water / food | “I drank a glass of water”, “I had lunch” | “Tomé un vaso de agua”, “Ya almorcé” |
+| Radiation | “How's the radiation?”, “I'm in the shelter” | “¿Cómo está la radiación?”, “Estoy en el refugio” |
+| Mind | “How do I sound?”, “I feel stressed”, “Breathe with me” | “¿Cómo sueno?”, “Respira conmigo” |
+| Blood | “How are my blood tests?”, “How is my glucose?” | “¿Cómo están mis exámenes de sangre?” |
+| Explain | “What is bone loss?”, “Why is radiation dangerous?” | “¿Qué es la pérdida ósea?” |
+| Symptoms | “I have a headache”, “I feel dizzy” | “Me duele la cabeza” |
+| Routine / alerts | “What's next?”, “Show my alerts” | “¿Qué sigue?”, “Muéstrame mis avisos” |
+| Doctor / Earth | “Call the doctor”, “Are we in contact with Earth?” | “Avisa al médico” |
+| Medical check | “My blood pressure is 118 over 76” | “Mi presión es 118 sobre 76”, “Glucosa 96” |
 
-Una **pregunta** (“¿tengo fiebre?”) consulta datos; una **afirmación** (“tengo fiebre”) se registra como síntoma y la ve el médico de vuelo. Si hay un cambio crítico, el asistente lo dice primero.
+A **question** (“do I have a fever?”) looks up data; a **statement** (“I have a fever”) is logged as a symptom and shown to the flight surgeon. If there is a critical change, the assistant says it first.
 
 ---
 
-## Riesgos NASA y reglas
+## NASA risks and rules
 
-El motor usa 31 riesgos del HSRB, entre ellos: cardiovascular, intolerancia ortostática, tromboembolismo venoso, hipoxia, exposición a CO₂, radiación, sueño y fatiga, salud conductual, equipo, EVA, descompresión, inmunológico, sensoriomotor, SANS, cálculos renales, músculo, hueso, nutrición, medicamentos, audición y operaciones independientes de la Tierra.
+The engine uses 31 HSRB risks, including: cardiovascular, orthostatic intolerance, venous thromboembolism, hypoxia, CO₂ exposure, radiation, sleep and fatigue, behavioral health, team performance, EVA, decompression sickness, immune, sensorimotor, SANS, kidney stones, muscle, bone, nutrition, medications, hearing and Earth-independent operations.
 
-Umbrales principales (`station/config.py`, centralizados para validarlos contra NASA-STD-3001):
+Main thresholds (`station/config.py`, centralized so they can be validated against NASA-STD-3001):
 
-| Variable | Umbral |
+| Variable | Threshold |
 |---|---|
-| Pulso en reposo alto / bajo | > 100 / < 45 lpm (EVA > 160) |
-| SpO₂ | aviso < 94 %, crítico < 90 % |
-| Fiebre (piel) | > 36,9 °C o +1,2 °C sobre la base |
-| Presión sistólica | > 140 o < 90 mmHg |
-| Respiración | > 22 rpm |
-| VFC (RMSSD) | < 60 % de la base personal |
-| CO₂ de cabina | aviso 3 mmHg, crítico 5 mmHg (traje 8 mmHg) |
-| Gasto metabólico EVA | > 580 W |
-| Protones GOES ≥10 MeV | ≥ 10 pfu (tormenta S1) |
-| Sueño corto | < 6 h |
+| Resting pulse high / low | > 100 / < 45 bpm (EVA > 160) |
+| SpO₂ | warning < 94%, critical < 90% |
+| Fever (skin) | > 36.9 °C or +1.2 °C above baseline |
+| Systolic pressure | > 140 or < 90 mmHg |
+| Breathing rate | > 22 breaths/min |
+| HRV (RMSSD) | < 60% of personal baseline |
+| Cabin CO₂ | warning 3 mmHg, critical 5 mmHg (suit 8 mmHg) |
+| EVA metabolic rate | > 580 W |
+| GOES protons ≥10 MeV | ≥ 10 pfu (S1 storm) |
+| Short sleep | < 6 h |
 
 ---
 
-## Tripulación de la demo
+## Demo crew
 
-| ID | Nombre (ficticio) | Rol | Exámenes reales |
+| ID | Name (fictional) | Role | Real lab tests |
 |---|---|---|---|
-| CM-01 | Ana Ríos | Comandante | Inspiration4 C001 |
-| CM-02 | Marco Silva | Ingeniero de vuelo | Inspiration4 C002 |
-| CM-03 | Lena Ortiz | Especialista de misión | Inspiration4 C003 |
-| CM-04 | Kenji Mori | Especialista de misión | Inspiration4 C004 |
+| CM-01 | Ana Ríos | Commander | Inspiration4 C001 |
+| CM-02 | Marco Silva | Flight engineer | Inspiration4 C002 |
+| CM-03 | Lena Ortiz | Mission specialist | Inspiration4 C003 |
+| CM-04 | Kenji Mori | Mission specialist | Inspiration4 C004 |
 
-Médico de vuelo: Dra. Paula Vega. Día de misión: 42.
+Flight surgeon: Dr. Paula Vega. Mission day: 42.
 
 ---
 
 ## API
 
-| Método | Ruta | Descripción |
+| Method | Route | Description |
 |---|---|---|
-| POST | `/api/ingest` | El reloj envía `{"device_id","crew_id","packets":[{ts,hr,rr_ms[],spo2,skin_temp,resp_rate,sbp,dbp,accel_g,…}]}` |
-| GET | `/api/state` · `/api/stream` (SSE) | Estado de la tripulación, ambiente, radiación, DTN y alertas |
-| GET | `/api/crew` · `/api/crew/{id}` | Tripulación · detalle (series, hallazgos, voz, chat) |
-| POST | `/api/voice/{id}?transcript=&calibrate=&ask=&log=` | Audio WAV → biomarcadores, índices y respuesta |
-| POST | `/api/chat/{id}` | `{"text": "...", "source": "texto"|"voz"}` → asistente |
-| GET | `/api/labs/{id}` | Exámenes de sangre reales de Inspiration4 del tripulante |
+| POST | `/api/ingest` | The watch sends `{"device_id","crew_id","packets":[{ts,hr,rr_ms[],spo2,skin_temp,resp_rate,sbp,dbp,accel_g,…}]}` |
+| GET | `/api/state` · `/api/stream` (SSE) | Crew status, environment, radiation, DTN and alerts |
+| GET | `/api/crew` · `/api/crew/{id}` | Crew · detail (series, findings, voice, chat) |
+| POST | `/api/voice/{id}?transcript=&calibrate=&ask=&log=` | WAV audio → biomarkers, indices and answer |
+| POST | `/api/chat/{id}` | `{"text": "...", "source": "texto"|"voz"}` → assistant |
+| GET | `/api/labs/{id}` | Real Inspiration4 blood tests for the crew member |
 | POST | `/api/scenario` | `{"crew_id": "CM-01"|"ALL", "scenario": "eva_co2"}` |
-| POST | `/api/dtn` | `{"blackout": true}` o `{"destination": "MARTE"}` |
-| GET/POST | `/api/earth/inbox` · `/api/earth/send` | Vista Tierra |
-| GET/POST | `/api/watch/{id}/view` · `/api/watch/{id}/action` · `/api/watch/{id}/feed` | Lo que muestra el reloj y sus acciones (`water`, `meal`, `shelter`, `doctor`, `breathe`, `sync`…) |
-| GET | `/api/sources` · `/api/knowledge` · `/api/export/{id}.csv` · `/api/version` | Fuentes, base HSRB, exportación, versión |
-| — | `/tripulantes`, `/tripulantes/{id}/resumen`, `/tripulantes/{id}/metricas/{codigo}`, `/tripulantes/{id}/linea-base`, `/alertas` (GET/PATCH), `/autorreportes`, `/ingesta/lote` | Contrato de integración del equipo |
+| POST | `/api/dtn` | `{"blackout": true}` or `{"destination": "MARTE"}` |
+| GET/POST | `/api/earth/inbox` · `/api/earth/send` | Earth view |
+| GET/POST | `/api/watch/{id}/view` · `/api/watch/{id}/action` · `/api/watch/{id}/feed` | What the watch shows and its actions (`water`, `meal`, `shelter`, `doctor`, `breathe`, `sync`…) |
+| GET | `/api/sources` · `/api/knowledge` · `/api/export/{id}.csv` · `/api/version` | Sources, HSRB knowledge base, export, version |
+| — | `/tripulantes`, `/tripulantes/{id}/resumen`, `/tripulantes/{id}/metricas/{codigo}`, `/tripulantes/{id}/linea-base`, `/alertas` (GET/PATCH), `/autorreportes`, `/ingesta/lote` | Team integration contract |
 
-Agrega `?lang=en` a cualquier ruta para recibir los textos en inglés.
+Add `?lang=en` to any route to receive texts in English.
 
 ---
 
-## Estructura del repositorio
+## Repository structure
 
 ```
 SANBOSI-SPACE-HEALTH/
-├── Abrir SANBOSI.command          arranque con doble clic (macOS)
-├── Abrir SANBOSI (Windows).bat    arranque con doble clic (Windows)
-├── start.sh                       arranque por terminal (macOS/Linux)
+├── Abrir SANBOSI.command          double-click launcher (macOS)
+├── Abrir SANBOSI (Windows).bat    double-click launcher (Windows)
+├── start.sh                       terminal launcher (macOS/Linux)
 ├── requirements.txt
-├── PLAN.md                        plan, arquitectura y guion de la demo
-├── LEEME-PRIMERO.txt              instrucciones cortas para quien recibe el proyecto
-├── station/                       estación a bordo (servidor, IA, riesgos, voz, DTN, conectores NASA)
-├── watch/                         simulador del reloj y modelo fisiológico
-├── web/                           panel, reloj, traducciones y modelo 3D (web/vendor)
-├── dtn-framework/                 framework DTN (arXiv:2605.21624)
-├── tests/                         pruebas de extremo a extremo y del contrato
-└── docs/                          capturas de pantalla
+├── PLAN.md                        plan, architecture and demo script (Spanish)
+├── LEEME-PRIMERO.txt              short instructions for whoever receives the project (Spanish)
+├── station/                       onboard station (server, AI, risks, voice, DTN, NASA connectors)
+├── watch/                         watch simulator and physiological model
+├── web/                           panel, watch, translations and 3D model (web/vendor)
+├── dtn-framework/                 DTN framework (arXiv:2605.21624)
+├── tests/                         end-to-end and contract tests
+└── docs/                          screenshots
 ```
 
 ---
 
-## Pruebas
+## Tests
 
 ```bash
 source .venv/bin/activate
-python tests/test_e2e.py         # flujo completo: reloj → estación → alertas → voz → DTN → Tierra → CSV
-python tests/test_contrato.py    # contrato del equipo (con la estación corriendo)
+python tests/test_e2e.py         # full flow: watch → station → alerts → voice → DTN → Earth → CSV
+python tests/test_contrato.py    # team contract (with the station running)
 ```
 
 ---
 
-## Configuración
+## Configuration
 
-Variables de entorno (ver `station/config.py`):
+Environment variables (see `station/config.py`):
 
-| Variable | Por defecto | Para qué |
+| Variable | Default | Purpose |
 |---|---|---|
-| `SANBOSI_PORT` | 8700 | Puerto del servidor |
+| `SANBOSI_PORT` | 8700 | Server port |
 | `NASA_MODE` | auto | `auto` / `live` / `sim` |
 | `DTN_MODE` | embedded | `embedded` / `external` |
-| `DTN_TIME_SCALE` | 20 | Acelera la órbita (92 min ≈ 4,6 min) |
-| `MCC_STATION` | washington | Estación terrena de control |
-| `OLLAMA_MODEL` | llama3.2:3b | Modelo local opcional |
-| `MISSION_DAY` | 42 | Día de misión mostrado |
+| `DTN_TIME_SCALE` | 20 | Speeds up the orbit (92 min ≈ 4.6 min) |
+| `MCC_STATION` | washington | Mission control ground station |
+| `OLLAMA_MODEL` | llama3.2:3b | Optional local model |
+| `MISSION_DAY` | 42 | Mission day shown |
 
 ---
 
-## Hardware propuesto
+## Proposed hardware
 
-El prototipo simula el reloj, pero está pensado para un **smartwatch comercial**: sensor óptico PPG (pulso, SpO₂, VFC), temperatura de piel, acelerómetro y micrófono, conectado a la estación por la red local de la nave. El “firmware” de `watch/simulator.py` ya implementa el envío por lotes, reintentos y almacenamiento sin enlace que tendría el dispositivo real.
-
----
-
-## Limitaciones
-
-- Los índices de voz y los umbrales son **indicadores de apoyo** para la demo; no es un dispositivo médico.
-- La presión arterial del reloj es **estimada** (sin manguito), como en un wearable real.
-- La fisiología de los relojes es **simulada**; el ambiente de la ISS, la radiación y los exámenes de Inspiration4 son **datos reales** cuando hay conexión.
-- El reconocimiento de voz usa el dictado del navegador (Chrome/Edge, requiere internet). Para transcripción sin internet: `pip install faster-whisper`.
-- El micrófono funciona en `localhost`; desde otro dispositivo de la red se necesita HTTPS.
+The prototype simulates the watch, but it is designed for a **commercial smartwatch**: optical PPG sensor (pulse, SpO₂, HRV), skin temperature, accelerometer and microphone, connected to the station over the spacecraft's local network. The “firmware” in `watch/simulator.py` already implements the batching, retries and offline storage a real device would have.
 
 ---
 
-## Créditos
+## Limitations
 
-- **Equipo Sanbosi-FET** (Neiva, Huila, Colombia): idea, diseño del reloj, modelo 3D del cuerpo y software.
-- **Framework DTN:** K. Grover y M. Ponce, *An Open-Source Framework to Emulate Delay and Disruption Tolerant Networks for International Space Station Communication*, ISORC 2026, [arXiv:2605.21624](https://arxiv.org/abs/2605.21624) (`kritgrover/iss-simulator`).
-- **Datos:** NASA ISS Live!, NASA OSDR (RadLab, Inspiration4 OSD-569/575), NOAA SWPC GOES, NASA Human System Risk Board.
-- **Librerías:** Starlette, Uvicorn, NumPy, SciPy, cryptography, Three.js.
+- Voice indices and thresholds are **supporting indicators** for the demo; this is not a medical device.
+- Blood pressure from the watch is **estimated** (cuffless), as it would be on a real wearable.
+- Watch physiology is **simulated**; ISS environment, radiation and Inspiration4 lab tests are **real data** when there is a connection.
+- Speech recognition uses the browser's dictation (Chrome/Edge, requires internet). For offline transcription: `pip install faster-whisper`.
+- The microphone works on `localhost`; from another device on the network HTTPS is required.
+
+---
+
+## Credits
+
+- **Team Sanbosi-FET** (Neiva, Huila, Colombia): idea, watch design, 3D body model and software.
+- **DTN framework:** K. Grover and M. Ponce, *An Open-Source Framework to Emulate Delay and Disruption Tolerant Networks for International Space Station Communication*, ISORC 2026, [arXiv:2605.21624](https://arxiv.org/abs/2605.21624) (`kritgrover/iss-simulator`).
+- **Data:** NASA ISS Live!, NASA OSDR (RadLab, Inspiration4 OSD-569/575), NOAA SWPC GOES, NASA Human System Risk Board.
+- **Libraries:** Starlette, Uvicorn, NumPy, SciPy, cryptography, Three.js.
