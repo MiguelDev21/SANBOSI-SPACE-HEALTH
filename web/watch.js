@@ -780,7 +780,7 @@ setInterval(() => {
   if (W.speaking && window.speechSynthesis && !speechSynthesis.speaking && !speechSynthesis.pending && now - (W.speakAt || now) > 3000) W.speaking = false;
   if (!WAKE.on && !W.rec && !W.speaking && !WAKE.busy) wakeStart();
 }, 1500);
-document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(wakeStart, 300); });
+document.addEventListener("visibilitychange", () => { if (document.hidden) RING.stop(); else { if (WAKE.want) RING.start(); setTimeout(wakeStart, 300); } });
 function wakeUI() { const el = $("#wakeState"); if (!el) return;
   el.innerHTML = !wakeSupported() ? `<span class="c-warn">${L2("La activación por voz necesita Chrome o Edge.", "Voice wake-up needs Chrome or Edge.")}</span>` : WAKE.want ? (WAKE.on ? `<span class="c-ok">● ${L2("Escuchando “Hola Sanbosi”", "Listening for “Hey Sanbosi”")}</span>` : `<span class="muted">● ${L2("En espera…", "Standing by…")}</span>`) : `<span class="muted">${L2("Desactivada", "Off")}</span>`;
   $("#wakeToggle").checked = WAKE.want; }
@@ -824,7 +824,17 @@ $("#micSel").addEventListener("change", e => {
   RING.stop(); if (WAKE.want) RING.start();
   banner(L2("Micrófono", "Microphone"), e.target.selectedOptions[0].textContent);
 });
-if (navigator.mediaDevices) navigator.mediaDevices.addEventListener("devicechange", () => { fillMics(); if (AV.micId() && WAKE.want) { RING.stop(); RING.start(); } });
+// Cuando macOS cambia el micrófono por su cuenta (p. ej. el iPhone por Continuidad) se sueltan los micrófonos
+// abiertos y se vuelven a abrir, para que el reloj siga al micrófono que el sistema eligió y no se quede con el anterior.
+let devTimer = 0;
+if (navigator.mediaDevices) navigator.mediaDevices.addEventListener("devicechange", () => {
+  clearTimeout(devTimer);
+  devTimer = setTimeout(() => {
+    fillMics();
+    if (RING.on) { RING.stop(); if (WAKE.want) RING.start(); }
+    if (WAKE.on && !W.rec && !W.speaking) wakeStop();          // el vigilante la vuelve a abrir con el micrófono nuevo
+  }, 600);
+});
 setTimeout(fillMics, 1500); setTimeout(fillMics, 6000);   // los nombres aparecen cuando el navegador ya dio permiso al micrófono
 
 const ptt = $("#ptt");
